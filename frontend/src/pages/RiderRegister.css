@@ -1,0 +1,127 @@
+.rider-auth {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  padding: 2rem;
+}
+
+.rider-auth-container {
+  background: white;
+  padding: 3rem;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.rider-auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.rider-logo {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.rider-auth-header h1 {
+  color: #0f172a;
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.rider-auth-header p {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.rider-register-form {
+  margin-bottom: 1.5rem;
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #334155;
+  font-size: 0.9rem;
+}
+
+.form-group select {
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-group select:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.error-alert {
+  background-color: #fff1f2;
+  color: #b91c1c;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+}
+
+.btn-register {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: white !important;
+  padding: 0.85rem !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.3s !important;
+}
+
+.btn-register:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+.rider-login-link {
+  text-align: center;
+  color: #475569;
+  font-weight: 600;
+}
+
+.rider-login-link a {
+  color: #10b981;
+  text-decoration: none;
+}
+
+.rider-login-link a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .rider-auth-container {
+    padding: 2rem;
+  }
+
+  .rider-auth-header h1 {
+    font-size: 1.5rem;
+  }
+}

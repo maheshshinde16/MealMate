@@ -1,0 +1,29 @@
+:root {
+  --brand-primary: #3498db;
+  --brand-secondary: #2c3e50;
+  --brand-success: #27ae60;
+  --brand-danger: #e74c3c;
+  --text-dark: #2c3e50;
+  --text-light: #7f8c8d;
+  --bg-light: #f8f9fa;
+  --bg-white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+}
+
+a {
+  color: inherit;
+}
+
+.app-main {
+  min-height: calc(100vh - 220px);
+}

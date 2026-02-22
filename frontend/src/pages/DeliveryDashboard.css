@@ -1,0 +1,69 @@
+.delivery-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: calc(100vh - 200px);
+}
+
+.delivery-dashboard h1 {
+  color: #2c3e50;
+  margin-bottom: 2rem;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.no-deliveries {
+  text-align: center;
+  color: #7f8c8d;
+  font-size: 1.25rem;
+  padding: 4rem 2rem;
+}
+
+.deliveries-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.delivery-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.delivery-info h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.delivery-info p {
+  margin-bottom: 0.5rem;
+  color: #7f8c8d;
+}
+
+.delivery-info strong {
+  color: #2c3e50;
+}
+
+.delivery-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .delivery-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

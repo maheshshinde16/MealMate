@@ -1,0 +1,113 @@
+.rider-auth {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  padding: 2rem;
+}
+
+.rider-auth-container {
+  width: 100%;
+  max-width: 500px;
+}
+
+.rider-auth-header {
+  text-align: center;
+  color: white;
+  margin-bottom: 2rem;
+}
+
+.rider-logo {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.rider-auth-header h1 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.rider-auth-header p {
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.rider-login-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.rider-login-card h2 {
+  text-align: left;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.rider-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.error-alert {
+  background-color: #fff1f2;
+  color: #b91c1c;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  font-size: 0.9rem;
+}
+
+.btn-login {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: white !important;
+  padding: 0.85rem !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.3s !important;
+}
+
+.btn-login:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+.rider-signup-link {
+  text-align: center;
+  color: #475569;
+  font-weight: 600;
+}
+
+.rider-signup-link a {
+  color: #10b981;
+  text-decoration: none;
+}
+
+.rider-signup-link a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .rider-login-card {
+    padding: 2rem;
+  }
+
+  .rider-auth-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .rider-login-card h2 {
+    font-size: 1.25rem;
+  }
+}
