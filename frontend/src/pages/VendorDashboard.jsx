@@ -30,6 +30,20 @@ const VendorDashboard = () => {
     description: '',
     available: true
   });
+  const statusPriority = {
+    PENDING: 1,
+    CONFIRMED: 2,
+    PREPARING: 3,
+    OUT_FOR_DELIVERY: 4,
+    DELIVERED: 5,
+    CANCELLED: 6
+  };
+
+  const getStatusLabel = (status) => {
+    if (status === 'PREPARING') return 'READY TO PICK';
+    if (status === 'OUT_FOR_DELIVERY') return 'OUT FOR DELIVERY';
+    return status || 'UNKNOWN';
+  };
 
   useEffect(() => {
     // Redirect to vendor login if not authenticated
@@ -40,18 +54,50 @@ const VendorDashboard = () => {
     
     fetchVendorOrders();
     fetchMenuItems();
+
+    const intervalId = setInterval(() => {
+      fetchVendorOrders();
+    }, 8000);
+
+    return () => clearInterval(intervalId);
   }, [isAuthenticated, user, navigate]);
 
   const fetchVendorOrders = async () => {
     try {
       const data = await orderApi.getAllOrders();
-      setOrders(data);
-      calculateStats(data);
+      const orderList = Array.isArray(data) ? data : [];
+      const vendorOrders = filterOrdersForVendor(orderList);
+      const sortedOrders = sortOrders(vendorOrders);
+      setOrders(sortedOrders);
+      calculateStats(sortedOrders);
     } catch (err) {
       console.error('Failed to load orders');
     } finally {
       setLoading(false);
     }
+  };
+
+  const filterOrdersForVendor = (orderList) => {
+    if (!user?.id) {
+      return orderList;
+    }
+
+    const filtered = orderList.filter(order => order.vendorId === user.id);
+    return filtered.length > 0 ? filtered : orderList;
+  };
+
+  const sortOrders = (orderList) => {
+    return [...orderList].sort((a, b) => {
+      const statusA = statusPriority[a.status] || 99;
+      const statusB = statusPriority[b.status] || 99;
+      if (statusA !== statusB) {
+        return statusA - statusB;
+      }
+
+      const timeA = new Date(a.orderDate || 0).getTime();
+      const timeB = new Date(b.orderDate || 0).getTime();
+      return timeB - timeA;
+    });
   };
 
   const calculateStats = (orders) => {
@@ -70,12 +116,40 @@ const VendorDashboard = () => {
   };
 
   const updateOrderStatus = async (orderId, newStatus) => {
-    // Update order status logic
-    const updatedOrders = orders.map(order =>
-      order.id === orderId ? { ...order, status: newStatus } : order
-    );
-    setOrders(updatedOrders);
-    calculateStats(updatedOrders);
+    try {
+      // Call backend API to update order status
+      const orderToUpdate = orders.find(o => o.id === orderId);
+      if (!orderToUpdate) {
+        alert('Order not found');
+        return;
+      }
+
+      const updatedOrderData = {
+        ...orderToUpdate,
+        status: newStatus
+      };
+
+      await orderApi.updateOrder(orderId, updatedOrderData);
+
+      // Update local state only after successful API call
+      const updatedOrders = orders.map(order =>
+        order.id === orderId ? { ...order, status: newStatus } : order
+      );
+      setOrders(updatedOrders);
+      calculateStats(updatedOrders);
+
+      // Show success message based on status
+      const statusMessages = {
+        'CONFIRMED': 'Order confirmed successfully!',
+        'PREPARING': 'Order marked as preparing',
+        'CANCELLED': 'Order has been cancelled'
+      };
+
+      alert(statusMessages[newStatus] || `Order status updated to ${newStatus}`);
+    } catch (err) {
+      console.error('Failed to update order status:', err);
+      alert('Failed to update order status. Please try again.');
+    }
   };
 
   const fetchMenuItems = async () => {
@@ -378,7 +452,7 @@ const VendorDashboard = () => {
                     <div className="col-amount">₹{order.totalAmount}</div>
                     <div className="col-status">
                       <span className={`status-badge status-${order.status?.toLowerCase()}`}>
-                        {order.status}
+                        {getStatusLabel(order.status)}
                       </span>
                     </div>
                     <div className="col-time">2 hours ago</div>
@@ -400,6 +474,33 @@ const VendorDashboard = () => {
                             Reject
                           </Button>
                         </>
+                      )}
+                      {order.status === 'CONFIRMED' && (
+                        <Button 
+                          variant="primary"
+                          size="small"
+                          onClick={() => updateOrderStatus(order.id, 'PREPARING')}
+                        >
+                          Ready to Pick
+                        </Button>
+                      )}
+                      {order.status === 'PREPARING' && (
+                        <Button 
+                          variant="secondary"
+                          size="small"
+                          disabled
+                        >
+                          Ready to Pick
+                        </Button>
+                      )}
+                      {(order.status === 'DELIVERED' || order.status === 'CANCELLED') && (
+                        <Button 
+                          variant="secondary"
+                          size="small"
+                          disabled
+                        >
+                          {order.status}
+                        </Button>
                       )}
                     </div>
                   </div>

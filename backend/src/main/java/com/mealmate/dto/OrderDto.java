@@ -14,6 +14,7 @@ public class OrderDto {
     private String id;
     private String userId;
     private String vendorId;
+    private String deliveryPartnerId;
     private List<OrderItemDto> items;
     private LocalDateTime orderDate;
     private Double totalAmount;

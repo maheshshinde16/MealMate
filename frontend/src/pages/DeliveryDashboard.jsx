@@ -1,25 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import { getAllOrders } from '../api/orderApi';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import orderApi from '../api/orderApi';
 import Loader from '../components/Loader';
 import Button from '../components/Button';
 import './DeliveryDashboard.css';
 
 const DeliveryDashboard = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useSelector(state => state.auth);
   const [deliveries, setDeliveries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('ALL');
 
+  const getStatusLabel = (status) => {
+    if (status === 'PREPARING') return 'READY TO PICK';
+    if (status === 'OUT_FOR_DELIVERY') return 'OUT FOR DELIVERY';
+    return status || 'UNKNOWN';
+  };
+
   useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/rider-login');
+      return;
+    }
     fetchDeliveries();
-  }, []);
+  }, [isAuthenticated]);
 
   const fetchDeliveries = async () => {
     try {
-      const data = await getAllOrders();
-      // Filter only orders that need delivery
-      const deliveryOrders = data.filter(
-        order => order.status === 'OUT_FOR_DELIVERY' || order.status === 'CONFIRMED'
-      );
+      const data = await orderApi.getAllOrders();
+      // Filter only orders that need delivery and are assigned to this rider
+      const deliveryOrders = data.filter(order => {
+        if (order.status === 'CONFIRMED' || order.status === 'PREPARING') {
+          // Show all confirmed orders (available for pickup)
+          return true;
+        }
+        if ((order.status === 'OUT_FOR_DELIVERY' || order.status === 'DELIVERED') && 
+            order.deliveryPartnerId === user?.id) {
+          // Show orders assigned to this rider
+          return true;
+        }
+        return false;
+      });
       setDeliveries(deliveryOrders);
     } catch (err) {
       console.error('Failed to load deliveries');
@@ -28,20 +51,58 @@ const DeliveryDashboard = () => {
     }
   };
 
-  const updateDeliveryStatus = (orderId, status) => {
-    alert(`Delivery ${orderId} status updated to ${status}`);
-    // Update delivery status logic
+  const updateDeliveryStatus = async (orderId, status) => {
+    try {
+      const deliveryToUpdate = deliveries.find(d => d.id === orderId);
+      if (!deliveryToUpdate) {
+        alert('Delivery not found');
+        return;
+      }
+
+      const updatedDeliveryData = {
+        ...deliveryToUpdate,
+        status: status,
+        deliveryPartnerId: user?.id  // Include rider ID for OUT_FOR_DELIVERY status
+      };
+
+      await orderApi.updateOrder(orderId, updatedDeliveryData);
+
+      // Update local state only after successful API call
+      const updatedDeliveries = deliveries.map(delivery =>
+        delivery.id === orderId ? { ...delivery, status: status, deliveryPartnerId: user?.id } : delivery
+      );
+      setDeliveries(updatedDeliveries);
+
+      // Show success message
+      const statusMessages = {
+        'OUT_FOR_DELIVERY': 'Pickup confirmed! Order is now out for delivery',
+        'DELIVERED': 'Great! Order marked as delivered',
+        'CANCELLED': 'Order has been cancelled'
+      };
+
+      alert(statusMessages[status] || `Delivery status updated to ${status}`);
+    } catch (err) {
+      console.error('Failed to update delivery status:', err);
+      alert('Failed to update delivery status. Please try again.');
+    }
   };
 
   const filteredDeliveries = filter === 'ALL' 
     ? deliveries 
-    : deliveries.filter(d => d.status === filter);
+    : filter === 'CONFIRMED'
+      ? deliveries.filter(d => d.status === 'CONFIRMED' || d.status === 'PREPARING')
+      : deliveries.filter(d => d.status === filter);
 
   if (loading) return <Loader fullPage />;
+
+  if (!isAuthenticated) {
+    return <div>Please login to view deliveries</div>;
+  }
 
   return (
     <div className="delivery-dashboard">
       <h1>Delivery Dashboard</h1>
+      <p className="welcome-msg">Hello, {user?.fullName}! 👋</p>
 
       <div className="filter-buttons">
         <Button 
@@ -54,13 +115,13 @@ const DeliveryDashboard = () => {
           variant={filter === 'CONFIRMED' ? 'primary' : 'secondary'}
           onClick={() => setFilter('CONFIRMED')}
         >
-          Ready for Pickup
+          Available ({deliveries.filter(d => d.status === 'CONFIRMED' || d.status === 'PREPARING').length})
         </Button>
         <Button 
           variant={filter === 'OUT_FOR_DELIVERY' ? 'primary' : 'secondary'}
           onClick={() => setFilter('OUT_FOR_DELIVERY')}
         >
-          Out for Delivery
+          Active ({deliveries.filter(d => d.status === 'OUT_FOR_DELIVERY').length})
         </Button>
       </div>
 
@@ -74,11 +135,11 @@ const DeliveryDashboard = () => {
                 <h3>Order #{delivery.id}</h3>
                 <p><strong>Customer:</strong> {delivery.customerName || 'N/A'}</p>
                 <p><strong>Address:</strong> {delivery.deliveryAddress}</p>
-                <p><strong>Amount:</strong> ${delivery.totalAmount}</p>
-                <p><strong>Status:</strong> {delivery.status}</p>
+                <p><strong>Amount:</strong> ₹{delivery.totalAmount}</p>
+                <p><strong>Status:</strong> <span className={`status-badge ${delivery.status}`}>{getStatusLabel(delivery.status)}</span></p>
               </div>
               <div className="delivery-actions">
-                {delivery.status === 'CONFIRMED' && (
+                {(delivery.status === 'CONFIRMED' || delivery.status === 'PREPARING') && (
                   <Button 
                     variant="primary"
                     onClick={() => updateDeliveryStatus(delivery.id, 'OUT_FOR_DELIVERY')}
@@ -91,7 +152,7 @@ const DeliveryDashboard = () => {
                     variant="success"
                     onClick={() => updateDeliveryStatus(delivery.id, 'DELIVERED')}
                   >
-                    Mark Delivered
+                    Delivered
                   </Button>
                 )}
               </div>

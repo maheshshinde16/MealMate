@@ -176,7 +176,7 @@ const RiderRegister = () => {
         </form>
 
         <p className="rider-login-link">
-          Already a delivery partner? <Link to="/login">Login here</Link>
+          Already a delivery partner? <Link to="/rider-login">Login here</Link>
         </p>
       </div>
     </div>

@@ -9,9 +9,11 @@ import Home from './pages/Home';
 import Browse from './pages/Browse';
 import Cart from './pages/Cart';
 import Orders from './pages/Orders';
+import SubscriptionMeals from './pages/SubscriptionMeals';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
+import MealDetails from './pages/MealDetails';
 import HowItWorks from './pages/HowItWorks';
 import About from './pages/About';
 import Careers from './pages/Careers';
@@ -43,6 +45,11 @@ import RiderLogin from './pages/RiderLogin';
 
 // Delivery Portal Pages
 import DeliveryHome from './pages/DeliveryHome';
+import DeliveryDashboard from './pages/DeliveryDashboard';
+import DeliveryProfile from './pages/DeliveryProfile';
+import DeliveryEarnings from './pages/DeliveryEarnings';
+import DeliveryFAQ from './pages/DeliveryFAQ';
+import DeliverySettings from './pages/DeliverySettings';
 
 // Layouts
 import VendorLayout from './layouts/VendorLayout';
@@ -80,6 +87,7 @@ function App() {
                   <Route path="profile" element={<Profile />} />
                   <Route path="browse" element={<Browse />} />
                   <Route path="explore-meals" element={<Browse />} />
+                  <Route path="meals/:id" element={<MealDetails />} />
                   <Route path="how-it-works" element={<HowItWorks />} />
                   <Route path="about" element={<About />} />
                   <Route path="careers" element={<Careers />} />
@@ -92,6 +100,7 @@ function App() {
                   <Route path="news" element={<News />} />
                   <Route path="cart" element={<Cart />} />
                   <Route path="orders" element={<Orders />} />
+                  <Route path="subscriptions" element={<SubscriptionMeals />} />
                 </Routes>
               </main>
               <Footer />
@@ -132,6 +141,31 @@ function App() {
           <Route path="/delivery-partners" element={
             <DeliveryLayout>
               <DeliveryHome />
+            </DeliveryLayout>
+          } />
+          <Route path="/delivery-dashboard" element={
+            <DeliveryLayout>
+              <DeliveryDashboard />
+            </DeliveryLayout>
+          } />
+          <Route path="/delivery-profile" element={
+            <DeliveryLayout>
+              <DeliveryProfile />
+            </DeliveryLayout>
+          } />
+          <Route path="/delivery-partners/earnings" element={
+            <DeliveryLayout>
+              <DeliveryEarnings />
+            </DeliveryLayout>
+          } />
+          <Route path="/delivery-partners/faq" element={
+            <DeliveryLayout>
+              <DeliveryFAQ />
+            </DeliveryLayout>
+          } />
+          <Route path="/delivery-settings" element={
+            <DeliveryLayout>
+              <DeliverySettings />
             </DeliveryLayout>
           } />
 

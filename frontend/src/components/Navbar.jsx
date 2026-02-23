@@ -51,10 +51,7 @@ const Navbar = () => {
               {user?.roles?.includes('ROLE_DELIVERY') && (
                 <Link to="/delivery-dashboard" className="nav-link">Delivery</Link>
               )}
-              <NavLink to="/cart" className={({ isActive }) => isActive ? 'nav-link cart-link active' : 'nav-link cart-link'}>
-                <ShoppingCartOutlined />
-                {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-              </NavLink>
+              <NavLink to="/cart" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Cart</NavLink>
               
               <div className="profile-menu-container">
                 <button className="profile-button" onClick={toggleProfileMenu}>

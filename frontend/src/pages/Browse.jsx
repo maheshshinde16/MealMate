@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import { getAllVendors } from '../api/vendorApi';
 import menuItemApi from '../api/menuItemApi';
 import { useCart } from '../context/CartContext';
+import { getMealImageUrl } from '../config/mealImages';
 import VendorCard from '../components/VendorCard';
 import Loader from '../components/Loader';
 import './Browse.css';
@@ -15,6 +17,16 @@ const Browse = () => {
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const { addToCart } = useCart();
+
+  const getMealImage = (item) => {
+    if (item?.imageUrl) return item.imageUrl;
+    // Check if we have a specific image for this meal
+    const specificImage = getMealImageUrl(item?.name);
+    if (specificImage) return specificImage;
+    // Fallback to dynamic Unsplash search if no specific mapping
+    const mealName = item?.name || 'food';
+    return `https://source.unsplash.com/featured/400x300/?${encodeURIComponent(mealName)}`;
+  };
 
   const handleAddToCart = (item) => {
     const success = addToCart(item, 1);
@@ -53,8 +65,9 @@ const Browse = () => {
   };
 
   const filteredVendors = Array.isArray(vendors) ? vendors.filter(vendor =>
-    vendor.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    vendor.cuisineType?.toLowerCase().includes(searchTerm.toLowerCase())
+    (vendor.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    vendor.cuisineType?.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    vendor?.name && vendor.name.trim().length > 2
   ) : [];
 
   if (loading) return <Loader fullPage />;
@@ -79,20 +92,34 @@ const Browse = () => {
         ) : (
           <div className="browse-menu-grid">
             {menuItems.length > 0 ? (
-              menuItems.slice(0, 8).map(item => (
+              menuItems
+                .filter(item => item?.name && item?.price && item.name.trim().length > 2)
+                .slice(0, 8)
+                .map(item => (
                 <div key={item.id} className="browse-menu-card">
-                  <div className="browse-menu-image">
-                    <img
-                      src={item.imageUrl || 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop&auto=format'}
-                      alt={item.name}
-                    />
-                  </div>
+                  <Link to={`/meals/${item.id}`} className="browse-menu-link">
+                    <div className="browse-menu-image">
+                      <img
+                        src={getMealImage(item)}
+                        alt={item.name}
+                        onError={(e) => {
+                          const mealName = item?.name || 'food';
+                          e.target.src = `https://source.unsplash.com/featured/400x300/?${encodeURIComponent(mealName)}`;
+                        }}
+                      />
+                    </div>
+                  </Link>
                   <div className="browse-menu-body">
                     <div className="browse-menu-top">
-                      <h3>{item.name}</h3>
+                      <Link to={`/meals/${item.id}`} className="browse-menu-link">
+                        <h3>{item.name}</h3>
+                      </Link>
                       <span>₹{Number(item.price || 0).toFixed(2)}</span>
                     </div>
-                    <p>{item.vendorName || 'Restaurant Partner'}</p>
+                    <p className="browse-menu-vendor">{item.vendorName || 'Restaurant Partner'}</p>
+                    <p className="browse-menu-desc">
+                      {item.description || 'Freshly prepared meal made with quality ingredients.'}
+                    </p>
                     <button 
                       className="browse-add-cart-btn"
                       onClick={() => handleAddToCart(item)}

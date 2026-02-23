@@ -1,0 +1,387 @@
+.earnings-container {
+  background: linear-gradient(135deg, #f5f7fa 0%, #f0f4f8 100%);
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.earnings-header {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.earnings-header h1 {
+  font-size: 2.2rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+}
+
+.earnings-header p {
+  margin: 0;
+  font-size: 1rem;
+  opacity: 0.95;
+}
+
+/* Period Selector */
+.period-selector {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.period-btn {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #e2e8f0;
+  background: white;
+  color: #2d3748;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+  font-size: 0.95rem;
+}
+
+.period-btn:hover {
+  border-color: #10b981;
+  color: #10b981;
+}
+
+.period-btn.active {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border-color: #10b981;
+}
+
+/* Earnings Cards */
+.earnings-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.earnings-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s;
+}
+
+.earnings-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card-icon {
+  font-size: 3rem;
+  min-width: 60px;
+}
+
+.card-content {
+  flex: 1;
+}
+
+.card-label {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.card-value {
+  margin: 0.5rem 0 0 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.earnings-card.total {
+  border-left: 5px solid #10b981;
+}
+
+.earnings-card.deliveries {
+  border-left: 5px solid #3b82f6;
+}
+
+.earnings-card.bonus {
+  border-left: 5px solid #f59e0b;
+}
+
+.earnings-card.average {
+  border-left: 5px solid #8b5cf6;
+}
+
+/* Recent Deliveries */
+.recent-deliveries {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.recent-deliveries h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.3rem;
+  color: #1a202c;
+}
+
+.deliveries-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.delivery-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem;
+  background: #f8fafb;
+  border-radius: 8px;
+  border-left: 4px solid #10b981;
+  transition: all 0.3s;
+}
+
+.delivery-item:hover {
+  background: #f0f9f7;
+}
+
+.delivery-order {
+  flex: 1;
+}
+
+.order-no {
+  margin: 0;
+  font-weight: 700;
+  color: #1a202c;
+  font-size: 1rem;
+}
+
+.order-time {
+  margin: 0.25rem 0 0 0;
+  color: #718096;
+  font-size: 0.85rem;
+}
+
+.delivery-earnings {
+  text-align: right;
+  margin-right: 2rem;
+}
+
+.base-amount {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.bonus-amount {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.85rem;
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.delivery-status {
+  min-width: 120px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #d1fae5;
+  color: #065f46;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Payment Methods */
+.payment-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.payment-section h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.3rem;
+  color: #1a202c;
+}
+
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.payment-method {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: #f8fafb;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+}
+
+.method-icon {
+  font-size: 2.5rem;
+}
+
+.method-details {
+  flex: 1;
+}
+
+.method-name {
+  margin: 0;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.method-info {
+  margin: 0.5rem 0 0 0;
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+.method-action {
+  padding: 0.6rem 1.5rem;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.method-action:hover {
+  background: #059669;
+  transform: translateY(-2px);
+}
+
+/* Withdrawal Section */
+.withdrawal-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.withdrawal-section h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.3rem;
+  color: #1a202c;
+}
+
+.withdrawal-card {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  padding: 2rem;
+  border-radius: 12px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.withdrawal-info {
+  flex: 1;
+}
+
+.withdrawal-available {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.withdrawal-amount {
+  margin: 0.5rem 0 0 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.withdrawal-note {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.btn-withdraw {
+  padding: 1rem 2rem;
+  background: white;
+  color: #10b981;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.btn-withdraw:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .earnings-container {
+    padding: 1rem;
+  }
+
+  .earnings-header {
+    padding: 1.5rem;
+  }
+
+  .earnings-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .earnings-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .period-selector {
+    flex-direction: column;
+  }
+
+  .period-btn {
+    width: 100%;
+  }
+
+  .delivery-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .delivery-earnings {
+    margin-right: 0;
+    width: 100%;
+    text-align: left;
+  }
+
+  .withdrawal-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-withdraw {
+    width: 100%;
+  }
+}

@@ -18,10 +18,10 @@ const DeliveryHome = () => {
               Join MealMate's delivery network and start earning today. Flexible hours, competitive pay, and the freedom to be your own boss.
             </p>
             <div className="hero-buttons">
-              <button className="btn-primary" onClick={() => navigate('/delivery-register')}>
+              <button className="btn-primary" onClick={() => navigate('/rider-register')}>
                 Sign Up to Deliver
               </button>
-              <button className="btn-secondary" onClick={() => navigate('/delivery-login')}>
+              <button className="btn-secondary" onClick={() => navigate('/rider-login')}>
                 Already a Partner? Sign In
               </button>
             </div>

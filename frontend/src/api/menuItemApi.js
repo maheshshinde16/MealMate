@@ -10,6 +10,11 @@ export const getMenuItemsByVendor = async (vendorId) => {
   return response.data.data || response.data;
 };
 
+export const getMenuItemById = async (id) => {
+  const response = await axios.get(`/menu-items/${id}`);
+  return response.data.data || response.data;
+};
+
 export const createMenuItem = async (menuItemData) => {
   const response = await axios.post('/menu-items', menuItemData);
   return response.data.data || response.data;
@@ -28,6 +33,7 @@ export const deleteMenuItem = async (id) => {
 const menuItemApi = {
   getAllMenuItems,
   getMenuItemsByVendor,
+  getMenuItemById,
   createMenuItem,
   updateMenuItem,
   deleteMenuItem

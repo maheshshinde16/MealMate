@@ -16,7 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -35,13 +37,21 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse register(RegisterRequest request) {
+        String normalizedEmail = request.getEmail() != null
+                ? request.getEmail().trim().toLowerCase()
+                : null;
+
         // Check if user already exists
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+        if (normalizedEmail == null || normalizedEmail.isEmpty()) {
+            throw new RuntimeException("Email is required");
+        }
+
+        if (userRepository.findByEmailIgnoreCase(normalizedEmail).isPresent()) {
             throw new RuntimeException("Email already registered");
         }
 
         User user = new User();
-        user.setEmail(request.getEmail());
+        user.setEmail(normalizedEmail);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setFullName(request.getFullName());
         user.setPhoneNumber(request.getPhoneNumber());
@@ -56,7 +66,7 @@ public class AuthServiceImpl implements AuthService {
         if ("vendor".equals(roleType)) {
             roleName = "ROLE_VENDOR";
         } else if ("rider".equals(roleType)) {
-            roleName = "ROLE_RIDER";
+            roleName = "ROLE_DELIVERY";
         } else {
             roleName = "ROLE_USER";
         }
@@ -88,8 +98,22 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("Invalid email or password"));
+        String normalizedEmail = request.getEmail() != null
+                ? request.getEmail().trim().toLowerCase()
+                : null;
+
+        if (normalizedEmail == null || normalizedEmail.isEmpty()) {
+            throw new RuntimeException("Invalid email or password");
+        }
+
+        Optional<User> userMatch = userRepository.findByEmailIgnoreCase(normalizedEmail);
+        if (userMatch.isEmpty()) {
+            String escaped = Pattern.quote(normalizedEmail);
+            String regex = "^\\s*" + escaped + "\\s*$";
+            userMatch = userRepository.findByEmailRegex(regex);
+        }
+
+        User user = userMatch.orElseThrow(() -> new ResourceNotFoundException("Invalid email or password"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid email or password");
@@ -97,9 +121,17 @@ public class AuthServiceImpl implements AuthService {
 
         // Validate user has the requested role
         if (request.getRole() != null && !request.getRole().isEmpty()) {
-            String requestedRole = "ROLE_" + request.getRole().toUpperCase();
+            String roleType = request.getRole().toLowerCase();
+            boolean allowLegacyRiderRole = "rider".equals(roleType);
+
+            // Map role names consistently with register method
+            String requestedRole = "vendor".equals(roleType)
+                    ? "ROLE_VENDOR"
+                    : (allowLegacyRiderRole ? "ROLE_DELIVERY" : "ROLE_USER");
+            
             boolean hasRole = user.getRoles().stream()
-                    .anyMatch(role -> role.getName().equals(requestedRole));
+                    .anyMatch(role -> role.getName().equals(requestedRole)
+                            || (allowLegacyRiderRole && role.getName().equals("ROLE_RIDER")));
             
             if (!hasRole) {
                 throw new RuntimeException("This email is not registered as a " + request.getRole());

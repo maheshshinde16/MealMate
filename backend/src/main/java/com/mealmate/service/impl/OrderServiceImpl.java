@@ -91,6 +91,14 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalAmount(orderDto.getTotalAmount());
         order.setDeliveryAddress(orderDto.getDeliveryAddress());
         
+        // Assign delivery partner when order status changes to OUT_FOR_DELIVERY
+        if ("OUT_FOR_DELIVERY".equals(orderDto.getStatus()) && orderDto.getDeliveryPartnerId() != null) {
+            User deliveryPartner = userRepository.findById(orderDto.getDeliveryPartnerId()).orElse(null);
+            if (deliveryPartner != null) {
+                order.setDeliveryPartner(deliveryPartner);
+            }
+        }
+        
         Order updatedOrder = orderRepository.save(order);
         return convertToDto(updatedOrder);
     }
@@ -107,6 +115,7 @@ public class OrderServiceImpl implements OrderService {
         dto.setId(order.getId());
         dto.setUserId(order.getUser() != null ? order.getUser().getId() : null);
         dto.setVendorId(order.getVendor() != null ? order.getVendor().getId() : null);
+        dto.setDeliveryPartnerId(order.getDeliveryPartner() != null ? order.getDeliveryPartner().getId() : null);
         dto.setOrderDate(order.getOrderDate());
         dto.setTotalAmount(order.getTotalAmount());
         dto.setStatus(order.getStatus());

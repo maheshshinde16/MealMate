@@ -74,6 +74,12 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.browse-menu-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
 .browse-menu-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
@@ -114,10 +120,17 @@
   font-size: 1rem;
 }
 
-.browse-menu-body > p {
+.browse-menu-vendor {
   color: #6c757d;
   font-size: 0.9rem;
+  margin: 0 0 0.35rem 0;
+}
+
+.browse-menu-desc {
+  color: #4a5568;
+  font-size: 0.9rem;
   margin: 0 0 0.75rem 0;
+  line-height: 1.4;
 }
 
 .browse-add-cart-btn {

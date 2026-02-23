@@ -1,0 +1,146 @@
+.meal-details {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: calc(100vh - 200px);
+}
+
+.meal-back-btn {
+  background: transparent;
+  border: 1px solid #cbd5e0;
+  color: #2d3748;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.meal-back-btn:hover {
+  border-color: #38b2ac;
+  color: #38b2ac;
+}
+
+.meal-details-card {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 2rem;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.meal-details-image {
+  height: 100%;
+  min-height: 420px;
+}
+
+.meal-details-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.meal-details-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.meal-details-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.meal-details-top h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #1a202c;
+}
+
+.meal-price {
+  color: #38b2ac;
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+
+.meal-vendor {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.meal-description {
+  color: #2d3748;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0.5rem 0 0 0;
+}
+
+.meal-meta {
+  margin-top: 0.5rem;
+}
+
+.meal-availability {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.meal-availability.available {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.meal-availability.unavailable {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.meal-add-btn {
+  margin-top: 1rem;
+  width: 100%;
+  background: #38b2ac;
+  color: white;
+  border: none;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.meal-add-btn:hover {
+  background: #319795;
+}
+
+.meal-add-btn:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+}
+
+.meal-error {
+  color: #b91c1c;
+  background: #fee2e2;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 900px) {
+  .meal-details-card {
+    grid-template-columns: 1fr;
+  }
+
+  .meal-details-image {
+    min-height: 300px;
+  }
+}

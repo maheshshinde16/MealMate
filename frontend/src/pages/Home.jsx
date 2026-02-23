@@ -104,7 +104,7 @@ const Home = () => {
         <div className="container">
           <h2 className="section-title">Featured Categories</h2>
           <div className="categories-grid">
-            <div className="category-card">
+            <Link to="/browse" className="category-card">
               <div className="category-image">
                 <img
                   src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80"
@@ -112,8 +112,8 @@ const Home = () => {
                 />
               </div>
               <h3>Daily Combos</h3>
-            </div>
-            <div className="category-card">
+            </Link>
+            <Link to="/browse" className="category-card">
               <div className="category-image">
                 <img
                   src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=600&q=80"
@@ -121,8 +121,8 @@ const Home = () => {
                 />
               </div>
               <h3>Fit & Fresh</h3>
-            </div>
-            <div className="category-card">
+            </Link>
+            <Link to="/browse" className="category-card">
               <div className="category-image">
                 <img
                   src="https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&w=600&q=80"
@@ -130,8 +130,8 @@ const Home = () => {
                 />
               </div>
               <h3>Street Food</h3>
-            </div>
-            <div className="category-card">
+            </Link>
+            <Link to="/browse" className="category-card">
               <div className="category-image">
                 <img
                   src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80"
@@ -139,7 +139,131 @@ const Home = () => {
                 />
               </div>
               <h3>Chef Specials</h3>
-            </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Subscription Meals Section */}
+      <section className="subscription-section">
+        <div className="container">
+          <h2 className="section-title">Subscription Meals</h2>
+          <p className="section-subtitle">Daily & Weekly Meal Plans for Every Lifestyle</p>
+          <div className="subscription-cards">
+            <Link to="/subscriptions" className="subscription-card">
+              <div className="subscription-icon">
+                <span>📅</span>
+              </div>
+              <h3>Daily Plans</h3>
+              <p>Fresh meals delivered every day</p>
+              <ul className="subscription-features">
+                <li>✓ Customized menus</li>
+                <li>✓ Flexible pricing</li>
+                <li>✓ Pause anytime</li>
+              </ul>
+            </Link>
+            <Link to="/subscriptions" className="subscription-card featured">
+              <div className="badge">POPULAR</div>
+              <div className="subscription-icon">
+                <span>📦</span>
+              </div>
+              <h3>Weekly Plans</h3>
+              <p>Save more with weekly subscriptions</p>
+              <ul className="subscription-features">
+                <li>✓ 20% discount</li>
+                <li>✓ Free delivery</li>
+                <li>✓ Priority support</li>
+              </ul>
+            </Link>
+            <Link to="/subscriptions" className="subscription-card">
+              <div className="subscription-icon">
+                <span>🎁</span>
+              </div>
+              <h3>Corporate Plans</h3>
+              <p>Team meal subscriptions</p>
+              <ul className="subscription-features">
+                <li>✓ Bulk discounts</li>
+                <li>✓ Dedicated support</li>
+                <li>✓ Custom menus</li>
+              </ul>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Personalization Section */}
+      <section className="personalization-section">
+        <div className="container">
+          <h2 className="section-title">AI-Powered Recommendations</h2>
+          <p className="section-subtitle">Personalized Meal Suggestions Just for You</p>
+          <div className="personalization-grid">
+            <Link to="/browse" className="personalization-card">
+              <div className="personalization-image">
+                <img 
+                  src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&h=300&fit=crop&auto=format" 
+                  alt="Based on your taste"
+                />
+              </div>
+              <h3>Your Taste Profile</h3>
+              <p>Meals curated based on your preferences</p>
+            </Link>
+            <Link to="/browse" className="personalization-card">
+              <div className="personalization-image">
+                <img 
+                  src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=500&h=300&fit=crop&auto=format" 
+                  alt="Trending favorites"
+                />
+              </div>
+              <h3>Trending This Week</h3>
+              <p>Popular meals in your area</p>
+            </Link>
+            <Link to="/browse" className="personalization-card">
+              <div className="personalization-image">
+                <img 
+                  src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&h=300&fit=crop&auto=format" 
+                  alt="Hidden gems"
+                />
+              </div>
+              <h3>Hidden Gems</h3>
+              <p>Discover local favorites near you</p>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Budget Meals Section */}
+      <section className="budget-section">
+        <div className="container">
+          <h2 className="section-title">Budget Meals</h2>
+          <p className="section-subtitle">Affordable, Delicious Meals for Everyone</p>
+          <div className="budget-grid">
+            <Link to="/browse" className="budget-card">
+              <div className="budget-badge">₹50-150</div>
+              <div className="budget-icon">
+                <span>🎓</span>
+              </div>
+              <h3>Student Specials</h3>
+              <p>Filling meals for student budgets</p>
+              <span className="budget-action">Explore →</span>
+            </Link>
+            <Link to="/browse" className="budget-card">
+              <div className="budget-badge">₹100-200</div>
+              <div className="budget-icon">
+                <span>💼</span>
+              </div>
+              <h3>Office Combos</h3>
+              <p>Quick lunch options for working professionals</p>
+              <span className="budget-action">Explore →</span>
+            </Link>
+            <Link to="/browse" className="budget-card">
+              <div className="budget-badge">₹200+</div>
+              <div className="budget-icon">
+                <span>👨‍👩‍👧</span>
+              </div>
+              <h3>Family Meals</h3>
+              <p>Budget-friendly family packs</p>
+              <span className="budget-action">Explore →</span>
+            </Link>
           </div>
         </div>
       </section>

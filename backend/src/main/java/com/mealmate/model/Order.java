@@ -25,6 +25,9 @@ public class Order {
     @DBRef
     private Vendor vendor;
 
+    @DBRef
+    private User deliveryPartner;
+
     private List<OrderItem> items;
     private LocalDateTime orderDate;
     private Double totalAmount;
