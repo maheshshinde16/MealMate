@@ -1,38 +1,41 @@
 package com.mealmate.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
-@Document(collection = "orders")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Document(collection = "orders")
 public class Order {
 
-    @Id
-    private String id;
+	@Id
+	private String id;
 
-    @DBRef
-    private User user;
+	private String orderNumber;
+	private String userId;
+	private String vendorId;
+	private List<OrderItem> items;
+	private Double subtotal;
+	private Double tax;
+	private Double deliveryFee;
+	private Double discount;
+	private Double totalAmount;
+	private String deliveryAddress;
+	private Map<String, Object> paymentDetails;
+	private String status; // PENDING, CONFIRMED, PREPARING, OUT_FOR_DELIVERY, DELIVERED, CANCELLED
+	private List<Map<String, Object>> timeline; // status change history
+	private String deliveryPartnerId;
+	private LocalDateTime estimatedDeliveryTime;
+	private LocalDateTime actualDeliveryTime;
+	private String type; // single, group, subscription
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 
-    @DBRef
-    private Vendor vendor;
-
-    @DBRef
-    private User deliveryPartner;
-
-    private List<OrderItem> items;
-    private LocalDateTime orderDate;
-    private Double totalAmount;
-    private String status;
-    private String deliveryAddress;
-    private String paymentMethod;
-    private String specialInstructions;
 }

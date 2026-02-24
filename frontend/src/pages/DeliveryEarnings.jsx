@@ -17,6 +17,13 @@ const DeliveryEarnings = () => {
       return;
     }
     fetchDeliveredOrders();
+    
+    // Auto-refresh earnings every 5 seconds to show newly delivered orders
+    const intervalId = setInterval(() => {
+      fetchDeliveredOrders();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
   }, [isAuthenticated]);
 
   const fetchDeliveredOrders = async () => {
@@ -24,7 +31,9 @@ const DeliveryEarnings = () => {
       const data = await orderApi.getAllOrders();
       // Filter only delivered orders assigned to this rider
       const delivered = data.filter(order => 
-        order.status === 'DELIVERED' && order.deliveryPartnerId === user?.id
+        order.status === 'DELIVERED' && 
+        order.deliveryPartnerId && 
+        String(order.deliveryPartnerId).trim() === String(user?.id).trim()
       );
       setDeliveredOrders(delivered);
     } catch (err) {
@@ -49,7 +58,7 @@ const DeliveryEarnings = () => {
     }
 
     const filtered = deliveredOrders.filter(order => {
-      const orderDate = new Date(order.orderDate);
+      const orderDate = new Date(order.createdAt || order.orderDate);
       return orderDate >= startDate;
     });
 
@@ -151,8 +160,8 @@ const DeliveryEarnings = () => {
             {deliveredOrders.slice(0, 10).map((order, index) => (
               <div key={order.id} className="delivery-item">
                 <div className="delivery-order">
-                  <p className="order-no">#{order.id}</p>
-                  <p className="order-time">{new Date(order.orderDate).toLocaleDateString()}</p>
+                  <p className="order-no">#{order.orderNumber || order.id}</p>
+                  <p className="order-time">{new Date(order.createdAt || order.orderDate).toLocaleDateString()}</p>
                 </div>
                 <div className="delivery-earnings">
                   <p className="base-amount">₹{Math.round(order.totalAmount * 0.6)}</p>

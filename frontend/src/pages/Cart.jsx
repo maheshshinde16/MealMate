@@ -21,6 +21,8 @@ const Cart = () => {
   const [mapReady, setMapReady] = useState(false);
   const [mapError, setMapError] = useState('');
   const addressInputRef = useRef(null);
+  const placeElementRef = useRef(null);
+  const placeElementHostRef = useRef(null);
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markerRef = useRef(null);
@@ -41,6 +43,10 @@ const Cart = () => {
       setMapError('Google Maps API key is missing.');
       return;
     }
+
+    window.gm_authFailure = () => {
+      setMapError('Google Maps authentication failed. Check the API key and referrer restrictions.');
+    };
 
     const existingScript = document.querySelector('script[data-google-maps]');
     if (existingScript && window.google?.maps?.places) {
@@ -63,6 +69,73 @@ const Cart = () => {
       return;
     }
 
+    if (!mapInstanceRef.current && mapContainerRef.current) {
+      mapInstanceRef.current = new window.google.maps.Map(mapContainerRef.current, {
+        center: { lat: 20.5937, lng: 78.9629 },
+        zoom: 5,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false
+      });
+    }
+
+    const updateMapForPlace = (formatted, location) => {
+      if (formatted) {
+        setDeliveryAddress(formatted);
+      }
+
+      if (location && mapInstanceRef.current) {
+        if (!markerRef.current) {
+          markerRef.current = new window.google.maps.Marker({
+            map: mapInstanceRef.current,
+            position: location
+          });
+        } else {
+          markerRef.current.setPosition(location);
+        }
+        mapInstanceRef.current.setCenter(location);
+        mapInstanceRef.current.setZoom(15);
+      }
+    };
+
+    if (window.google.maps.places.PlaceAutocompleteElement) {
+      if (!placeElementHostRef.current) {
+        return;
+      }
+
+      if (!placeElementRef.current) {
+        const placeElement = new window.google.maps.places.PlaceAutocompleteElement({
+          types: ['geocode']
+        });
+        placeElement.setAttribute('class', 'address-input');
+        placeElement.setAttribute('placeholder', 'Search location or type address');
+        placeElementHostRef.current.innerHTML = '';
+        placeElementHostRef.current.appendChild(placeElement);
+        placeElementRef.current = placeElement;
+
+        if (addressInputRef.current) {
+          addressInputRef.current.style.display = 'none';
+        }
+
+        placeElement.addEventListener('gmp-placeselect', async (event) => {
+          const place = event.place;
+          if (!place) {
+            return;
+          }
+
+          try {
+            await place.fetchFields({ fields: ['formattedAddress', 'location', 'displayName'] });
+            const formatted = place.formattedAddress || place.displayName || '';
+            updateMapForPlace(formatted, place.location);
+          } catch (error) {
+            console.error('Failed to fetch place details:', error);
+          }
+        });
+      }
+
+      return;
+    }
+
     const autocomplete = new window.google.maps.places.Autocomplete(addressInputRef.current, {
       fields: ['formatted_address', 'geometry', 'name'],
       types: ['geocode']
@@ -71,31 +144,7 @@ const Cart = () => {
     autocomplete.addListener('place_changed', () => {
       const place = autocomplete.getPlace();
       const formatted = place.formatted_address || place.name || '';
-      if (formatted) {
-        setDeliveryAddress(formatted);
-      }
-
-      if (place.geometry?.location && mapContainerRef.current) {
-        const location = place.geometry.location;
-        const map = mapInstanceRef.current || new window.google.maps.Map(mapContainerRef.current, {
-          center: location,
-          zoom: 15,
-          mapTypeControl: false,
-          streetViewControl: false,
-          fullscreenControl: false
-        });
-
-        mapInstanceRef.current = map;
-        if (!markerRef.current) {
-          markerRef.current = new window.google.maps.Marker({
-            map,
-            position: location
-          });
-        } else {
-          markerRef.current.setPosition(location);
-        }
-        map.setCenter(location);
-      }
+      updateMapForPlace(formatted, place.geometry?.location);
     });
   }, [mapReady]);
 
@@ -143,7 +192,7 @@ const Cart = () => {
           try {
             const updatedUser = { ...user, address: deliveryAddress };
             await userApi.updateUser(user.id, updatedUser);
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token');
             dispatch(loginAction({ user: updatedUser, token }));
           } catch (updateError) {
             console.error('Failed to update user address:', updateError);
@@ -240,6 +289,7 @@ const Cart = () => {
                     className="address-input"
                     required
                   />
+                  <div ref={placeElementHostRef}></div>
                   <p className="address-hint">Select a place from the suggestions for precise delivery.</p>
                   {mapError && <p className="map-error">{mapError}</p>}
                   <div className="map-preview" ref={mapContainerRef}></div>

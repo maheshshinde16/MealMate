@@ -25,6 +25,13 @@ const DeliveryDashboard = () => {
       return;
     }
     fetchDeliveries();
+    
+    // Auto-refresh deliveries every 5 seconds
+    const intervalId = setInterval(() => {
+      fetchDeliveries();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
   }, [isAuthenticated]);
 
   const fetchDeliveries = async () => {

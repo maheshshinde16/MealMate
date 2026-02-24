@@ -1,13 +1,20 @@
 package com.mealmate.service;
 
-import com.mealmate.dto.OrderDto;
-
+import com.mealmate.model.Order;
 import java.util.List;
 
 public interface OrderService {
-    List<OrderDto> getAllOrders();
-    OrderDto getOrderById(String id);
-    OrderDto createOrder(OrderDto orderDto);
-    OrderDto updateOrder(String id, OrderDto orderDto);
-    void deleteOrder(String id);
+
+	Order createOrder(Order order);
+	Order getOrderById(String id);
+	List<Order> getAllOrders();
+	List<Order> getUserOrders(String userId);
+	List<Order> getVendorOrders(String vendorId);
+	List<Order> getAvailableOrdersForRiders();
+	List<Order> getRiderOrders(String riderId);
+	Order updateOrderStatus(String orderId, String status);
+	Order updateOrder(String orderId, Order order);
+	void cancelOrder(String orderId);
+	void deleteOrder(String orderId);
+
 }

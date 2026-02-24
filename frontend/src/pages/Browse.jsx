@@ -137,9 +137,9 @@ const Browse = () => {
         )}
       </section>
 
-      {error && <div className="error-message">{error}</div>}
+      {/* {error && <div className="error-message">{error}</div>} */}
 
-      <div className="vendors-grid">
+      {/* <div className="vendors-grid">
         {filteredVendors.length > 0 ? (
           filteredVendors.map(vendor => (
             <VendorCard key={vendor.id} vendor={vendor} />
@@ -147,7 +147,7 @@ const Browse = () => {
         ) : (
           <p className="no-results">No vendors found</p>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

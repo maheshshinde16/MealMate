@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { login as loginAction } from '../store/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { login as loginAction, logout } from '../store/authSlice';
 import authApi from '../api/authApi';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -10,12 +10,30 @@ import './RiderLogin.css';
 const RiderLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { isAuthenticated, user } = useSelector(state => state.auth);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Clear non-rider credentials on page load/refresh
+  useEffect(() => {
+    const storedUser = sessionStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        // If stored user is not a rider, clear the credentials
+        if (!parsedUser?.roles?.includes('ROLE_DELIVERY')) {
+          dispatch(logout());
+          authApi.logout();
+        }
+      } catch (e) {
+        console.error('Error parsing stored user:', e);
+      }
+    }
+  }, [dispatch]);
 
   const handleChange = (e) => {
     setFormData({
@@ -30,6 +48,10 @@ const RiderLogin = () => {
     setLoading(true);
 
     try {
+      // Clear any previous authentication before logging in as rider
+      dispatch(logout());
+      authApi.logout();
+      
       const response = await authApi.login({ ...formData, role: 'rider' });
       dispatch(loginAction({
         user: response.user,

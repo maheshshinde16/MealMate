@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../store/authSlice';
@@ -10,10 +10,14 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-  const { getCartCount } = useCart();
+  const { cartItems } = useCart();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  
-  const cartCount = getCartCount();
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const count = cartItems.reduce((total, item) => total + item.quantity, 0);
+    setCartCount(count);
+  }, [cartItems]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -51,7 +55,11 @@ const Navbar = () => {
               {user?.roles?.includes('ROLE_DELIVERY') && (
                 <Link to="/delivery-dashboard" className="nav-link">Delivery</Link>
               )}
-              <NavLink to="/cart" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Cart</NavLink>
+              <NavLink to="/cart" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+                <ShoppingCartOutlined />
+                Cart
+                {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+              </NavLink>
               
               <div className="profile-menu-container">
                 <button className="profile-button" onClick={toggleProfileMenu}>

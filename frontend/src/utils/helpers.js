@@ -46,7 +46,7 @@ export const truncateText = (text, length = 50) => {
 // Get storage
 export const getFromStorage = (key) => {
   try {
-    return JSON.parse(localStorage.getItem(key));
+    return JSON.parse(sessionStorage.getItem(key));
   } catch (error) {
     console.error('Error reading from storage:', error);
     return null;
@@ -56,7 +56,7 @@ export const getFromStorage = (key) => {
 // Set storage
 export const setInStorage = (key, value) => {
   try {
-    localStorage.setItem(key, JSON.stringify(value));
+    sessionStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
     console.error('Error writing to storage:', error);
   }
@@ -65,7 +65,7 @@ export const setInStorage = (key, value) => {
 // Remove from storage
 export const removeFromStorage = (key) => {
   try {
-    localStorage.removeItem(key);
+    sessionStorage.removeItem(key);
   } catch (error) {
     console.error('Error removing from storage:', error);
   }

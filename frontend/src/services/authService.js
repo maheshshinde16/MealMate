@@ -8,7 +8,7 @@ const authService = {
     api.post('/auth/register', userData),
 
   logout: () => {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     return Promise.resolve();
   },
 

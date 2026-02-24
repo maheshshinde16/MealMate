@@ -118,7 +118,7 @@
   white-space: nowrap;
 }
 
-.profile-button {
+.vendor-profile .profile-button {
   background: linear-gradient(135deg, #38b2ac 0%, #2c7a7b 100%);
   border: none;
   border-radius: 50%;
@@ -138,6 +138,8 @@
 }
 
 .vendor-profile .profile-avatar {
+  /* background: linear-gradient(135deg, #38b2ac 0%, #2c7a7b 100%); */
+  border: none;
   color: white;
   font-weight: 700;
   font-size: 1rem;

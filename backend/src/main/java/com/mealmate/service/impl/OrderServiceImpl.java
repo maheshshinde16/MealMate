@@ -1,156 +1,155 @@
 package com.mealmate.service.impl;
 
-import com.mealmate.dto.OrderDto;
-import com.mealmate.dto.OrderItemDto;
 import com.mealmate.exception.ResourceNotFoundException;
 import com.mealmate.model.Order;
-import com.mealmate.model.OrderItem;
-import com.mealmate.model.User;
-import com.mealmate.model.Vendor;
 import com.mealmate.repository.OrderRepository;
-import com.mealmate.repository.UserRepository;
-import com.mealmate.repository.VendorRepository;
 import com.mealmate.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    @Autowired
-    private OrderRepository orderRepository;
+	@Autowired
+	private OrderRepository orderRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+	@Override
+	public Order createOrder(Order order) {
+		if (order.getOrderNumber() == null || order.getOrderNumber().isEmpty()) {
+			order.setOrderNumber("ORD-" + System.currentTimeMillis());
+		}
+		if (order.getStatus() == null) {
+			order.setStatus("PENDING");
+		}
+		if (order.getType() == null) {
+			order.setType("single");
+		}
+		order.setCreatedAt(LocalDateTime.now());
+		order.setUpdatedAt(LocalDateTime.now());
+		
+		// Initialize timeline
+		if (order.getTimeline() == null) {
+			order.setTimeline(new java.util.ArrayList<>());
+		}
+		Map<String, Object> initialStatus = new HashMap<>();
+		initialStatus.put("status", "PENDING");
+		initialStatus.put("timestamp", LocalDateTime.now());
+		order.getTimeline().add(initialStatus);
+		
+		return orderRepository.save(order);
+	}
 
-    @Autowired
-    private VendorRepository vendorRepository;
+	@Override
+	public Order getOrderById(String id) {
+		return orderRepository.findById(id)
+			.orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
+	}
 
-    @Override
-    public List<OrderDto> getAllOrders() {
-        return orderRepository.findAll().stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-    }
+	@Override
+	public List<Order> getAllOrders() {
+		return orderRepository.findAll();
+	}
 
-    @Override
-    public OrderDto getOrderById(String id) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
-        return convertToDto(order);
-    }
+	@Override
+	public List<Order> getUserOrders(String userId) {
+		return orderRepository.findByUserId(userId);
+	}
 
-    @Override
-    public OrderDto createOrder(OrderDto orderDto) {
-        Order order = new Order();
-        
-        // Set user and vendor references
-        if (orderDto.getUserId() != null) {
-            User user = userRepository.findById(orderDto.getUserId()).orElse(null);
-            if (user != null) {
-                order.setUser(user);
-            }
-        }
-        
-        if (orderDto.getVendorId() != null) {
-            Vendor vendor = vendorRepository.findById(orderDto.getVendorId()).orElse(null);
-            if (vendor != null) {
-                order.setVendor(vendor);
-            }
-        }
-        
-        // Convert order items
-        if (orderDto.getItems() != null) {
-            List<OrderItem> orderItems = orderDto.getItems().stream()
-                    .map(this::convertToOrderItem)
-                    .collect(Collectors.toList());
-            order.setItems(orderItems);
-        }
-        
-        order.setOrderDate(LocalDateTime.now());
-        order.setTotalAmount(orderDto.getTotalAmount());
-        order.setStatus(orderDto.getStatus() != null ? orderDto.getStatus() : "PENDING");
-        order.setDeliveryAddress(orderDto.getDeliveryAddress());
-        order.setPaymentMethod(orderDto.getPaymentMethod());
-        order.setSpecialInstructions(orderDto.getSpecialInstructions());
-        
-        Order savedOrder = orderRepository.save(order);
-        return convertToDto(savedOrder);
-    }
+	@Override
+	public List<Order> getVendorOrders(String vendorId) {
+		return orderRepository.findByVendorId(vendorId);
+	}
 
-    @Override
-    public OrderDto updateOrder(String id, OrderDto orderDto) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
-        
-        order.setStatus(orderDto.getStatus());
-        order.setTotalAmount(orderDto.getTotalAmount());
-        order.setDeliveryAddress(orderDto.getDeliveryAddress());
-        
-        // Assign delivery partner when order status changes to OUT_FOR_DELIVERY
-        if ("OUT_FOR_DELIVERY".equals(orderDto.getStatus()) && orderDto.getDeliveryPartnerId() != null) {
-            User deliveryPartner = userRepository.findById(orderDto.getDeliveryPartnerId()).orElse(null);
-            if (deliveryPartner != null) {
-                order.setDeliveryPartner(deliveryPartner);
-            }
-        }
-        
-        Order updatedOrder = orderRepository.save(order);
-        return convertToDto(updatedOrder);
-    }
+	@Override
+	public List<Order> getAvailableOrdersForRiders() {
+		return orderRepository.findByStatusIn(java.util.Arrays.asList("CONFIRMED", "PREPARING"));
+	}
 
-    @Override
-    public void deleteOrder(String id) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
-        orderRepository.delete(order);
-    }
+	@Override
+	public List<Order> getRiderOrders(String riderId) {
+		return orderRepository.findByDeliveryPartnerId(riderId);
+	}
 
-    private OrderDto convertToDto(Order order) {
-        OrderDto dto = new OrderDto();
-        dto.setId(order.getId());
-        dto.setUserId(order.getUser() != null ? order.getUser().getId() : null);
-        dto.setVendorId(order.getVendor() != null ? order.getVendor().getId() : null);
-        dto.setDeliveryPartnerId(order.getDeliveryPartner() != null ? order.getDeliveryPartner().getId() : null);
-        dto.setOrderDate(order.getOrderDate());
-        dto.setTotalAmount(order.getTotalAmount());
-        dto.setStatus(order.getStatus());
-        dto.setDeliveryAddress(order.getDeliveryAddress());
-        dto.setPaymentMethod(order.getPaymentMethod());
-        dto.setSpecialInstructions(order.getSpecialInstructions());
-        
-        // Convert order items
-        if (order.getItems() != null) {
-            List<OrderItemDto> itemDtos = order.getItems().stream()
-                    .map(this::convertToOrderItemDto)
-                    .collect(Collectors.toList());
-            dto.setItems(itemDtos);
-        }
-        
-        return dto;
-    }
+	@Override
+	public Order updateOrderStatus(String orderId, String status) {
+		Order order = getOrderById(orderId);
+		order.setStatus(status);
+		order.setUpdatedAt(LocalDateTime.now());
+		
+		// Add to timeline
+		Map<String, Object> statusEntry = new HashMap<>();
+		statusEntry.put("status", status);
+		statusEntry.put("timestamp", LocalDateTime.now());
+		if (order.getTimeline() == null) {
+			order.setTimeline(new java.util.ArrayList<>());
+		}
+		order.getTimeline().add(statusEntry);
+		
+		return orderRepository.save(order);
+	}
 
-    private OrderItem convertToOrderItem(OrderItemDto dto) {
-        OrderItem item = new OrderItem();
-        item.setMenuItemId(dto.getMenuItemId());
-        item.setMenuItemName(dto.getMenuItemName());
-        item.setQuantity(dto.getQuantity());
-        item.setPrice(dto.getPrice());
-        item.setSubtotal(dto.getSubtotal());
-        return item;
-    }
+	@Override
+	public Order updateOrder(String orderId, Order orderData) {
+		Order order = getOrderById(orderId);
+		
+		if (orderData.getStatus() != null && !orderData.getStatus().equals(order.getStatus())) {
+			order.setStatus(orderData.getStatus());
+			if (order.getTimeline() == null) {
+				order.setTimeline(new java.util.ArrayList<>());
+			}
+			Map<String, Object> statusEntry = new HashMap<>();
+			statusEntry.put("status", orderData.getStatus());
+			statusEntry.put("timestamp", LocalDateTime.now());
+			order.getTimeline().add(statusEntry);
+			
+			// Automatically set actualDeliveryTime when order is marked as DELIVERED
+			if ("DELIVERED".equals(orderData.getStatus())) {
+				order.setActualDeliveryTime(LocalDateTime.now());
+			}
+		}
+		
+		if (orderData.getDeliveryPartnerId() != null) {
+			order.setDeliveryPartnerId(orderData.getDeliveryPartnerId());
+		}
+		
+		if (orderData.getEstimatedDeliveryTime() != null) {
+			order.setEstimatedDeliveryTime(orderData.getEstimatedDeliveryTime());
+		}
+		
+		if (orderData.getActualDeliveryTime() != null) {
+			order.setActualDeliveryTime(orderData.getActualDeliveryTime());
+		}
+		
+		order.setUpdatedAt(LocalDateTime.now());
+		return orderRepository.save(order);
+	}
 
-    private OrderItemDto convertToOrderItemDto(OrderItem item) {
-        OrderItemDto dto = new OrderItemDto();
-        dto.setMenuItemId(item.getMenuItemId());
-        dto.setMenuItemName(item.getMenuItemName());
-        dto.setQuantity(item.getQuantity());
-        dto.setPrice(item.getPrice());
-        dto.setSubtotal(item.getSubtotal());
-        return dto;
-    }
+	@Override
+	public void cancelOrder(String orderId) {
+		Order order = getOrderById(orderId);
+		order.setStatus("CANCELLED");
+		order.setUpdatedAt(LocalDateTime.now());
+		
+		if (order.getTimeline() == null) {
+			order.setTimeline(new java.util.ArrayList<>());
+		}
+		Map<String, Object> statusEntry = new HashMap<>();
+		statusEntry.put("status", "CANCELLED");
+		statusEntry.put("timestamp", LocalDateTime.now());
+		order.getTimeline().add(statusEntry);
+		
+		orderRepository.save(order);
+	}
+
+	@Override
+	public void deleteOrder(String orderId) {
+		Order order = getOrderById(orderId);
+		orderRepository.delete(order);
+	}
+
 }
