@@ -30,6 +30,9 @@ const VendorDashboard = () => {
     description: '',
     available: true
   });
+  const [editingItemId, setEditingItemId] = useState(null);
+  const [editDescription, setEditDescription] = useState('');
+  const [savingItemId, setSavingItemId] = useState(null);
   const statusPriority = {
     PENDING: 1,
     CONFIRMED: 2,
@@ -208,6 +211,37 @@ const VendorDashboard = () => {
       setShowAddItem(false);
     } catch (err) {
       console.error('Failed to add menu item');
+    }
+  };
+
+  const startEditDescription = (item) => {
+    setEditingItemId(item.id);
+    setEditDescription(item.description || '');
+  };
+
+  const cancelEditDescription = () => {
+    setEditingItemId(null);
+    setEditDescription('');
+  };
+
+  const saveDescription = async (item) => {
+    const trimmedDescription = editDescription.trim();
+    setSavingItemId(item.id);
+    try {
+      const payload = {
+        ...item,
+        description: trimmedDescription
+      };
+      const updatedItem = await menuItemApi.updateMenuItem(item.id, payload);
+      const resolvedItem = updatedItem?.id ? updatedItem : payload;
+      setMenuItems(prev => prev.map(existing =>
+        existing.id === item.id ? { ...existing, ...resolvedItem } : existing
+      ));
+      cancelEditDescription();
+    } catch (err) {
+      console.error('Failed to update description');
+    } finally {
+      setSavingItemId(null);
     }
   };
 
@@ -609,12 +643,52 @@ const VendorDashboard = () => {
                   {menuItems.map(item => (
                     <div key={item.id} className="menu-item">
                       <div className="menu-item-main">
-                        <div>
+                        <div className="menu-item-details">
                           <h4>{item.name}</h4>
                           <p className="menu-item-meta">{item.category}</p>
-                          {item.description && <p className="menu-item-desc">{item.description}</p>}
+                          {editingItemId === item.id ? (
+                            <textarea
+                              className="menu-edit-textarea"
+                              rows="3"
+                              value={editDescription}
+                              onChange={(event) => setEditDescription(event.target.value)}
+                              placeholder="Add a short description"
+                            />
+                          ) : (
+                            item.description && <p className="menu-item-desc">{item.description}</p>
+                          )}
                         </div>
                         <div className="menu-item-price">₹{item.price.toFixed(2)}</div>
+                      </div>
+                      <div className="menu-item-actions">
+                        {editingItemId === item.id ? (
+                          <>
+                            <button
+                              type="button"
+                              className="btn-menu-action primary"
+                              onClick={() => saveDescription(item)}
+                              disabled={savingItemId === item.id}
+                            >
+                              {savingItemId === item.id ? 'Saving...' : 'Save'}
+                            </button>
+                            <button
+                              type="button"
+                              className="btn-menu-action secondary"
+                              onClick={cancelEditDescription}
+                              disabled={savingItemId === item.id}
+                            >
+                              Cancel
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            className="btn-menu-action ghost"
+                            onClick={() => startEditDescription(item)}
+                          >
+                            Edit description
+                          </button>
+                        )}
                       </div>
                       <span className={`menu-item-status ${item.available ? 'available' : 'unavailable'}`}>
                         {item.available ? 'Available' : 'Unavailable'}

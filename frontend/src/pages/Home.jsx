@@ -1,10 +1,26 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import './Home.css';
 
 const Home = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const [foodQuery, setFoodQuery] = useState('');
+  const [locationQuery, setLocationQuery] = useState('');
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    const params = new URLSearchParams();
+    if (foodQuery.trim()) {
+      params.set('food', foodQuery.trim());
+    }
+    if (locationQuery.trim()) {
+      params.set('location', locationQuery.trim());
+    }
+    const queryString = params.toString();
+    navigate(queryString ? `/browse?${queryString}` : '/browse');
+  };
 
   return (
     <div className="home">
@@ -15,12 +31,15 @@ const Home = () => {
             <h1>Discover Delicious Meals Near You</h1>
             <p className="hero-subtitle">From Local Kitchens & Home Chefs to Your Doorstep</p>
             
-            <div className="search-bar">
+            <form className="search-bar" onSubmit={handleSearchSubmit}>
               <div className="search-input-group">
                 <input 
                   type="text" 
                   placeholder="What would you like?" 
                   className="search-input"
+                  value={foodQuery}
+                  onChange={(event) => setFoodQuery(event.target.value)}
+                  aria-label="Search for meals"
                 />
               </div>
               <div className="search-input-group">
@@ -28,10 +47,13 @@ const Home = () => {
                   type="text" 
                   placeholder="Select Location" 
                   className="search-input"
+                  value={locationQuery}
+                  onChange={(event) => setLocationQuery(event.target.value)}
+                  aria-label="Search by location"
                 />
               </div>
-              <button className="search-button">Search</button>
-            </div>
+              <button className="search-button" type="submit">Search</button>
+            </form>
           </div>
           
           <div className="hero-images">

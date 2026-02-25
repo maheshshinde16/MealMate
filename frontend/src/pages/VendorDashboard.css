@@ -585,6 +585,27 @@
   font-size: 0.9rem;
 }
 
+.menu-item-details {
+  flex: 1;
+}
+
+.menu-edit-textarea {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  resize: vertical;
+  outline: none;
+  font-family: inherit;
+}
+
+.menu-edit-textarea:focus {
+  border-color: #38b2ac;
+  box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.15);
+}
+
 .menu-item-price {
   font-weight: 700;
   color: #1a365d;
@@ -606,6 +627,51 @@
 .menu-item-status.unavailable {
   background: #fee2e2;
   color: #b91c1c;
+}
+
+.menu-item-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn-menu-action {
+  border: 1px solid transparent;
+  background: #edf2f7;
+  color: #2d3748;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-menu-action.primary {
+  background: #38b2ac;
+  color: white;
+}
+
+.btn-menu-action.secondary {
+  background: #e2e8f0;
+  color: #2d3748;
+}
+
+.btn-menu-action.ghost {
+  background: transparent;
+  border-color: #cbd5f5;
+  color: #2c5282;
+}
+
+.btn-menu-action:hover {
+  transform: translateY(-1px);
+}
+
+.btn-menu-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Analytics Section */

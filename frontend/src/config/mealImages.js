@@ -10,6 +10,15 @@ const mealImages = {
   'VADA PAV': '/images/Vada-Pav-Recipe-thumbnail.jpg',
   'Vada Pav': '/images/Vada-Pav-Recipe-thumbnail.jpg',
   'vadapav': '/images/Vada-Pav-Recipe-thumbnail.jpg',
+
+  'Chicken Biryani': '/images/Chicken-Biryani-thumbnail.webp',
+  'CHICKEN BIRYANI': '/images/Chicken-Biryani-thumbnail.webp',
+  'chicken biryani': '/images/Chicken-Biryani-thumbnail.webp',
+  
+  'Chicken Handi': '/images/Chicken-Handi-thumbnail.webp',
+  'CHICKEN HANDI': '/images/Chicken-Handi-thumbnail.webp',
+  'chicken handi': '/images/Chicken-Handi-thumbnail.webp'
+
 };
 
 export const getMealImageUrl = (mealName) => {

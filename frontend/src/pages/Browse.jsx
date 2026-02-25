@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import { getAllVendors } from '../api/vendorApi';
 import menuItemApi from '../api/menuItemApi';
@@ -10,12 +10,14 @@ import Loader from '../components/Loader';
 import './Browse.css';
 
 const Browse = () => {
+  const [searchParams] = useSearchParams();
   const [vendors, setVendors] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [menuLoading, setMenuLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [locationTerm, setLocationTerm] = useState('');
   const { addToCart } = useCart();
 
   const getMealImage = (item) => {
@@ -39,6 +41,13 @@ const Browse = () => {
     fetchVendors();
     fetchMenuItems();
   }, []);
+
+  useEffect(() => {
+    const foodParam = searchParams.get('food') || '';
+    const locationParam = searchParams.get('location') || '';
+    setSearchTerm(foodParam);
+    setLocationTerm(locationParam);
+  }, [searchParams]);
 
   const fetchVendors = async () => {
     try {
@@ -70,19 +79,75 @@ const Browse = () => {
     vendor?.name && vendor.name.trim().length > 2
   ) : [];
 
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+  const normalizedLocation = locationTerm.trim().toLowerCase();
+  const vendorLocationById = Array.isArray(vendors)
+    ? vendors.reduce((acc, vendor) => {
+        const locationParts = [
+          vendor?.address,
+          vendor?.city,
+          vendor?.area,
+          vendor?.state,
+          vendor?.zip,
+          vendor?.postalCode,
+          vendor?.pincode
+        ].filter(Boolean);
+        if (vendor?.id) {
+          acc[vendor.id] = locationParts.join(' ').toLowerCase();
+        }
+        return acc;
+      }, {})
+    : {};
+
+  const matchesSearch = (item) => {
+    if (!normalizedSearch) return true;
+    const haystack = [
+      item?.name,
+      item?.description,
+      item?.category,
+      item?.vendorName
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+    return haystack.includes(normalizedSearch);
+  };
+
+  const matchesLocation = (item) => {
+    if (!normalizedLocation) return true;
+    if (!Array.isArray(vendors) || vendors.length === 0) return true;
+    const vendorLocation = vendorLocationById[item?.vendorId] || '';
+    return vendorLocation.includes(normalizedLocation);
+  };
+
+  const filteredMenuItems = Array.isArray(menuItems)
+    ? menuItems
+        .filter(item => item?.name && item?.price && item.name.trim().length > 2)
+        .filter(item => matchesSearch(item) && matchesLocation(item))
+    : [];
+
   if (loading) return <Loader fullPage />;
 
   return (
     <div className="browse-page">
       <div className="browse-header">
         <h1>Browse Restaurants</h1>
-        <input
-          type="text"
-          placeholder="Search by name or cuisine..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-        />
+        <div className="browse-search-bar">
+          <input
+            type="text"
+            placeholder="Search meals, cuisines, or vendors..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+          <input
+            type="text"
+            placeholder="Filter by location..."
+            value={locationTerm}
+            onChange={(e) => setLocationTerm(e.target.value)}
+            className="search-input"
+          />
+        </div>
       </div>
 
       <section className="browse-menu-items">
@@ -92,44 +157,47 @@ const Browse = () => {
         ) : (
           <div className="browse-menu-grid">
             {menuItems.length > 0 ? (
-              menuItems
-                .filter(item => item?.name && item?.price && item.name.trim().length > 2)
-                .slice(0, 8)
-                .map(item => (
-                <div key={item.id} className="browse-menu-card">
-                  <Link to={`/meals/${item.id}`} className="browse-menu-link">
-                    <div className="browse-menu-image">
-                      <img
-                        src={getMealImage(item)}
-                        alt={item.name}
-                        onError={(e) => {
-                          const mealName = item?.name || 'food';
-                          e.target.src = `https://source.unsplash.com/featured/400x300/?${encodeURIComponent(mealName)}`;
-                        }}
-                      />
+              filteredMenuItems.length > 0 ? (
+                filteredMenuItems
+                  .slice(0, 8)
+                  .map(item => (
+                  <div key={item.id} className="browse-menu-card">
+                    <Link to={`/meals/${item.id}`} className="browse-menu-link">
+                      <div className="browse-menu-image">
+                        <img
+                          src={getMealImage(item)}
+                          alt={item.name}
+                          onError={(e) => {
+                            const mealName = item?.name || 'food';
+                            e.target.src = `https://source.unsplash.com/featured/400x300/?${encodeURIComponent(mealName)}`;
+                          }}
+                        />
+                      </div>
+                    </Link>
+                    <div className="browse-menu-body">
+                      <div className="browse-menu-top">
+                        <Link to={`/meals/${item.id}`} className="browse-menu-link">
+                          <h3>{item.name}</h3>
+                        </Link>
+                        <span>₹{Number(item.price || 0).toFixed(2)}</span>
+                      </div>
+                      <p className="browse-menu-vendor">{item.vendorName || 'Restaurant Partner'}</p>
+                      <p className="browse-menu-desc">
+                        {item.description || 'Freshly prepared meal made with quality ingredients.'}
+                      </p>
+                      <button 
+                        className="browse-add-cart-btn"
+                        onClick={() => handleAddToCart(item)}
+                        disabled={!item.available}
+                      >
+                        <ShoppingCartOutlined /> Add to Cart
+                      </button>
                     </div>
-                  </Link>
-                  <div className="browse-menu-body">
-                    <div className="browse-menu-top">
-                      <Link to={`/meals/${item.id}`} className="browse-menu-link">
-                        <h3>{item.name}</h3>
-                      </Link>
-                      <span>₹{Number(item.price || 0).toFixed(2)}</span>
-                    </div>
-                    <p className="browse-menu-vendor">{item.vendorName || 'Restaurant Partner'}</p>
-                    <p className="browse-menu-desc">
-                      {item.description || 'Freshly prepared meal made with quality ingredients.'}
-                    </p>
-                    <button 
-                      className="browse-add-cart-btn"
-                      onClick={() => handleAddToCart(item)}
-                      disabled={!item.available}
-                    >
-                      <ShoppingCartOutlined /> Add to Cart
-                    </button>
                   </div>
-                </div>
-              ))
+                ))
+              ) : (
+                <p className="menu-status">No meals match your search yet.</p>
+              )
             ) : (
               <p className="menu-status">No menu items yet.</p>
             )}
