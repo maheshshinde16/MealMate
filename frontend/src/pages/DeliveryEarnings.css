@@ -1,88 +1,172 @@
 .earnings-container {
-  background: linear-gradient(135deg, #f5f7fa 0%, #f0f4f8 100%);
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   min-height: 100vh;
   padding: 2rem;
 }
 
 .earnings-header {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
   color: white;
-  padding: 2rem;
-  border-radius: 12px;
+  padding: 3rem 2rem;
+  border-radius: 16px;
   margin-bottom: 2rem;
-  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.2);
+}
+
+.earnings-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.earnings-header::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -5%;
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+}
+
+.header-content {
+  position: relative;
+  z-index: 1;
 }
 
 .earnings-header h1 {
-  font-size: 2.2rem;
+  font-size: 2.5rem;
   margin: 0 0 0.5rem 0;
   font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 .earnings-header p {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.1rem;
   opacity: 0.95;
 }
 
 /* Period Selector */
+.period-selector-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
 .period-selector {
   display: flex;
   gap: 1rem;
-  justify-content: center;
-  margin-bottom: 2rem;
+  background: white;
+  padding: 0.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .period-btn {
-  padding: 0.75rem 1.5rem;
-  border: 2px solid #e2e8f0;
-  background: white;
-  color: #2d3748;
+  padding: 0.75rem 1.75rem;
+  border: none;
+  background: transparent;
+  color: #64748b;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
   font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .period-btn:hover {
-  border-color: #10b981;
-  color: #10b981;
+  background: #f1f5f9;
+  color: #7c3aed;
 }
 
 .period-btn.active {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
   color: white;
-  border-color: #10b981;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
 }
 
 /* Earnings Cards */
 .earnings-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .earnings-card {
   background: white;
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: 14px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border-left: 5px solid transparent;
+  position: relative;
+  overflow: hidden;
 }
 
 .earnings-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 }
 
 .card-icon {
-  font-size: 3rem;
-  min-width: 60px;
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.icon-total {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.icon-total::before {
+  content: '₹';
+  color: white;
+  font-weight: 700;
+  font-size: 1.8rem;
+}
+
+.icon-deliveries {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+}
+
+.icon-deliveries::before {
+  content: '🚚';
+}
+
+.icon-bonus {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.icon-bonus::before {
+  content: '⭐';
+}
+
+.icon-average {
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+}
+
+.icon-average::before {
+  content: '📊';
 }
 
 .card-content {
@@ -94,46 +178,248 @@
   font-size: 0.85rem;
   color: #718096;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   font-weight: 600;
 }
 
 .card-value {
-  margin: 0.5rem 0 0 0;
-  font-size: 1.8rem;
+  margin: 0.75rem 0 0.5rem 0;
+  font-size: 2rem;
   font-weight: 700;
-  color: #1a202c;
+  color: #0f172a;
+}
+
+.card-change {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #10b981;
+  font-weight: 500;
 }
 
 .earnings-card.total {
-  border-left: 5px solid #10b981;
+  border-left-color: #10b981;
 }
 
 .earnings-card.deliveries {
-  border-left: 5px solid #3b82f6;
+  border-left-color: #3b82f6;
 }
 
 .earnings-card.bonus {
-  border-left: 5px solid #f59e0b;
+  border-left-color: #f59e0b;
 }
 
 .earnings-card.average {
-  border-left: 5px solid #8b5cf6;
+  border-left-color: #8b5cf6;
+}
+
+/* Additional Stats */
+.additional-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.stat-box {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.stat-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #7c3aed;
 }
 
 /* Recent Deliveries */
 .recent-deliveries {
   background: white;
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: 14px;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.recent-deliveries.empty {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.empty-state {
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+
+.section-header {
   margin-bottom: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .recent-deliveries h2 {
-  margin: 0 0 1.5rem 0;
+  margin: 0;
   font-size: 1.3rem;
-  color: #1a202c;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.section-subtitle {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+  font-weight: 500;
+}
+
+.deliveries-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.delivery-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem;
+  background: #f8fafc;
+  border-radius: 10px;
+  border-left: 4px solid #7c3aed;
+  transition: all 0.3s ease;
+}
+
+.delivery-item:hover {
+  background: #f1f5f9;
+  transform: translateX(4px);
+}
+
+.delivery-order {
+  flex: 1;
+}
+
+.order-no {
+  margin: 0;
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 1rem;
+}
+
+.order-time {
+  margin: 0.25rem 0 0 0;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.delivery-earnings {
+  text-align: right;
+  margin-right: 2rem;
+}
+
+.base-amount {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.bonus-amount {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.85rem;
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.delivery-status {
+  min-width: 120px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #065f46;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid #6ee7b7;
+}
+
+/* Earnings Breakdown */
+.earnings-breakdown {
+  background: white;
+  padding: 2rem;
+  border-radius: 14px;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.earnings-breakdown h2 {
+  margin: 0 0 2rem 0;
+  font-size: 1.3rem;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.breakdown-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.breakdown-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.breakdown-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.breakdown-bar {
+  height: 12px;
+  background: #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.breakdown-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #7c3aed 0%, #5b21b6 100%);
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+
+.breakdown-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #7c3aed;
 }
 
 .deliveries-list {
@@ -211,15 +497,16 @@
 .payment-section {
   background: white;
   padding: 2rem;
-  border-radius: 12px;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .payment-section h2 {
   margin: 0 0 1.5rem 0;
   font-size: 1.3rem;
-  color: #1a202c;
+  color: #0f172a;
+  font-weight: 700;
 }
 
 .payment-methods {
@@ -233,13 +520,31 @@
   align-items: center;
   gap: 1.5rem;
   padding: 1.5rem;
-  background: #f8fafb;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 12px;
   border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.payment-method:hover {
+  border-color: #7c3aed;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1);
 }
 
 .method-icon {
-  font-size: 2.5rem;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.icon-bank::before {
+  content: '🏦';
 }
 
 .method-details {
@@ -249,54 +554,88 @@
 .method-name {
   margin: 0;
   font-weight: 700;
-  color: #1a202c;
+  color: #0f172a;
+  font-size: 1rem;
 }
 
 .method-info {
   margin: 0.5rem 0 0 0;
-  color: #718096;
+  color: #64748b;
   font-size: 0.9rem;
 }
 
 .method-action {
   padding: 0.6rem 1.5rem;
-  background: #10b981;
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .method-action:hover {
-  background: #059669;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
 }
 
 /* Withdrawal Section */
 .withdrawal-section {
   background: white;
   padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
 }
 
 .withdrawal-section h2 {
   margin: 0 0 1.5rem 0;
   font-size: 1.3rem;
-  color: #1a202c;
+  color: #0f172a;
+  font-weight: 700;
 }
 
 .withdrawal-card {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  padding: 2rem;
-  border-radius: 12px;
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+  padding: 2.5rem;
+  border-radius: 14px;
   color: white;
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.withdrawal-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.withdrawal-card::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -5%;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+}
+
+.withdrawal-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .withdrawal-info {
@@ -307,16 +646,19 @@
   margin: 0;
   font-size: 0.9rem;
   opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
 }
 
 .withdrawal-amount {
-  margin: 0.5rem 0 0 0;
-  font-size: 2rem;
+  margin: 0.75rem 0 0 0;
+  font-size: 2.5rem;
   font-weight: 700;
 }
 
 .withdrawal-note {
-  margin: 0.5rem 0 0 0;
+  margin: 0.75rem 0 0 0;
   font-size: 0.85rem;
   opacity: 0.85;
 }
@@ -324,18 +666,27 @@
 .btn-withdraw {
   padding: 1rem 2rem;
   background: white;
-  color: #10b981;
+  color: #7c3aed;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   font-weight: 700;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
   white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.btn-withdraw:hover {
+.btn-withdraw:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-withdraw:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Responsive Design */
@@ -345,23 +696,32 @@
   }
 
   .earnings-header {
-    padding: 1.5rem;
+    padding: 2rem 1.5rem;
   }
 
   .earnings-header h1 {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+  }
+
+  .earnings-header p {
+    font-size: 1rem;
+  }
+
+  .period-selector {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .period-btn {
+    width: 100%;
   }
 
   .earnings-cards {
     grid-template-columns: 1fr;
   }
 
-  .period-selector {
-    flex-direction: column;
-  }
-
-  .period-btn {
-    width: 100%;
+  .additional-stats {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .delivery-item {
@@ -376,12 +736,64 @@
     text-align: left;
   }
 
-  .withdrawal-card {
+  .withdrawal-content {
     flex-direction: column;
     align-items: flex-start;
   }
 
   .btn-withdraw {
     width: 100%;
+  }
+
+  .breakdown-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .earnings-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .earnings-cards {
+    gap: 1rem;
+  }
+
+  .card-value {
+    font-size: 1.5rem;
+  }
+
+  .card-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .additional-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .recent-deliveries,
+  .payment-section,
+  .withdrawal-section,
+  .earnings-breakdown {
+    padding: 1.5rem 1rem;
+  }
+
+  .withdrawal-card {
+    padding: 1.5rem;
+  }
+
+  .withdrawal-amount {
+    font-size: 2rem;
+  }
+
+  .delivery-item {
+    padding: 1rem;
   }
 }

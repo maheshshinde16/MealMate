@@ -48,13 +48,13 @@ const DeliveryNavbar = () => {
               {showMenu && (
                 <div className="dropdown-menu">
                   <Link to="/delivery-profile" className="dropdown-item">
-                    👤 My Profile
+                    <span className="icon">👤</span> My Profile
                   </Link>
                   <Link to="/delivery-settings" className="dropdown-item">
-                    ⚙️ Settings
+                    <span className="icon">⚙️</span> Settings
                   </Link>
                   <button onClick={handleLogout} className="dropdown-item logout">
-                    🚪 Sign Out
+                    <span className="icon">🚪</span> Sign Out
                   </button>
                 </div>
               )}

@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { login as loginAction } from '../store/authSlice';
 import authApi from '../api/authApi';
 import Input from '../components/Input';
 import Button from '../components/Button';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 import './Register.css';
 
 const Register = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -23,6 +27,29 @@ const Register = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleGoogleSuccess = async (googleUserData) => {
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await authApi.googleRegister(googleUserData, 'user');
+      authApi.setAuthData(response.token, response.user);
+      dispatch(loginAction({
+        user: response.user,
+        token: response.token
+      }));
+      navigate('/');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Google registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = (errorMessage) => {
+    setError(errorMessage);
   };
 
   const handleSubmit = async (e) => {
@@ -123,6 +150,17 @@ const Register = () => {
             {loading ? 'Registering...' : 'Register'}
           </Button>
         </form>
+
+        <div className="auth-divider">
+          <span className="auth-divider-text">Or register with</span>
+        </div>
+
+        <GoogleLoginButton 
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+          role="user"
+          disabled={loading}
+        />
 
         <p className="login-link">
           Already have an account? <Link to="/login">Login here</Link>

@@ -5,6 +5,7 @@ import { login as loginAction, logout } from '../store/authSlice';
 import authApi from '../api/authApi';
 import Input from '../components/Input';
 import Button from '../components/Button';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 import './Login.css';
 
 const Login = () => {
@@ -58,6 +59,33 @@ const Login = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleGoogleSuccess = async (googleUserData) => {
+    setError('');
+    setLoading(true);
+
+    try {
+      // Clear any previous authentication before logging in as user
+      dispatch(logout());
+      authApi.logout();
+      
+      const response = await authApi.googleLogin(googleUserData, 'user');
+      authApi.setAuthData(response.token, response.user);
+      dispatch(loginAction({
+        user: response.user,
+        token: response.token
+      }));
+      navigate('/');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Google login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = (errorMessage) => {
+    setError(errorMessage);
   };
 
   const handleSubmit = async (e) => {
@@ -119,6 +147,17 @@ const Login = () => {
             {loading ? 'Logging in...' : 'Login'}
           </Button>
         </form>
+
+        <div className="auth-divider">
+          <span className="auth-divider-text">Or continue with</span>
+        </div>
+
+        <GoogleLoginButton 
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+          role="user"
+          disabled={loading}
+        />
 
         <p className="register-link">
           Don't have an account? <Link to="/register">Register here</Link>

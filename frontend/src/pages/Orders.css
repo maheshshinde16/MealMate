@@ -1,18 +1,25 @@
 .orders-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
   min-height: calc(100vh - 200px);
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .orders-page h1 {
-  color: #2c3e50;
+  font-size: 2.5rem;
   margin-bottom: 2rem;
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
 }
 
 .no-orders {
   text-align: center;
   padding: 4rem 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .no-orders p {
@@ -24,28 +31,44 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .order-card {
   background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border-left: 4px solid #7c3aed;
+}
+
+.order-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(124, 58, 237, 0.18);
 }
 
 .order-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #ecf0f1;
+  margin-bottom: 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+  color: white;
+  border-bottom: none;
 }
 
 .order-id {
-  font-weight: bold;
-  color: #2c3e50;
+  font-weight: 700;
+  color: white;
   font-size: 1.1rem;
+}
+
+.order-details {
+  padding: 1.5rem;
 }
 
 .order-status {

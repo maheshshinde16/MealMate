@@ -29,4 +29,12 @@ public class User {
 
     @DBRef
     private Set<Role> roles;
+
+    // Google OAuth fields
+    @Indexed(unique = true, sparse = true)
+    private String googleId;
+
+    private String picture;
+
+    private boolean isGoogleAuth;
 }

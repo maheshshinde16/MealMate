@@ -9,6 +9,7 @@ const VendorNavbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const profileRef = useRef(null);
 
   // Close menu when clicking outside
@@ -37,22 +38,36 @@ const VendorNavbar = () => {
     setShowProfileMenu(false);
   };
 
+  const toggleMobileMenu = () => {
+    setShowMobileMenu(prev => !prev);
+  };
+
+  const closeMobileMenu = () => {
+    setShowMobileMenu(false);
+  };
+
   return (
     <nav className="vendor-navbar">
       <div className="vendor-navbar-container">
-        <Link to="/partners" className="vendor-brand">
+        <Link to="/partners" className="vendor-brand" onClick={closeMobileMenu}>
           <span className="brand-text">MealMate</span>
           <span className="brand-tag">for Partners</span>
         </Link>
+
+        <button className="vendor-menu-toggle" onClick={toggleMobileMenu}>
+          <span className="toggle-bar"></span>
+          <span className="toggle-bar"></span>
+          <span className="toggle-bar"></span>
+        </button>
         
-        <ul className="vendor-menu">
-          <li><Link to="/partners">Home</Link></li>
-          <li><Link to="/partners/about">Why Partner</Link></li>
-          <li><Link to="/partners/pricing">Pricing</Link></li>
-          <li><Link to="/partners/support">Support</Link></li>
+        <ul className={`vendor-menu ${showMobileMenu ? 'active' : ''}`}>
+          <li><Link to="/partners" onClick={closeMobileMenu}>Home</Link></li>
+          <li><Link to="/partners/about" onClick={closeMobileMenu}>Why Partner</Link></li>
+          <li><Link to="/partners/pricing" onClick={closeMobileMenu}>Pricing</Link></li>
+          <li><Link to="/partners/support" onClick={closeMobileMenu}>Support</Link></li>
         </ul>
 
-        <div className="vendor-actions">
+        <div className={`vendor-actions ${showMobileMenu ? 'active' : ''}`}>
           {isAuthenticated && user ? (
             <div className="vendor-profile" ref={profileRef}>
               <div className="user-greeting">
@@ -116,8 +131,8 @@ const VendorNavbar = () => {
             </div>
           ) : (
             <>
-              <Link to="/vendor-login" className="btn-vendor-signin">Sign In</Link>
-              <Link to="/vendor-register" className="btn-vendor-signup">Get Started</Link>
+              <Link to="/vendor-login" className="btn-vendor-signin" onClick={closeMobileMenu}>Sign In</Link>
+              <Link to="/vendor-register" className="btn-vendor-signup" onClick={closeMobileMenu}>Get Started</Link>
             </>
           )}
         </div>

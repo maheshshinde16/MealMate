@@ -11,6 +11,31 @@ export const authApi = {
     return response.data.data;
   },
 
+  // Google OAuth methods
+  googleRegister: async (googleUserData, role) => {
+    const payload = {
+      email: googleUserData.email,
+      fullName: googleUserData.fullName,
+      googleId: googleUserData.googleId,
+      picture: googleUserData.picture,
+      role: role,
+      // For Google auth, we generate a random password
+      password: Math.random().toString(36).slice(-16)
+    };
+    const response = await axios.post('/auth/google/register', payload);
+    return response.data.data;
+  },
+
+  googleLogin: async (googleUserData, role) => {
+    const payload = {
+      email: googleUserData.email,
+      googleId: googleUserData.googleId,
+      role: role
+    };
+    const response = await axios.post('/auth/google/login', payload);
+    return response.data.data;
+  },
+
   logout: () => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('user');

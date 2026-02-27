@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import orderApi from '../api/orderApi';
+import authApi from '../api/authApi';
 import Loader from '../components/Loader';
 import './Orders.css';
 
@@ -14,7 +15,13 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     try {
-      const data = await orderApi.getAllOrders();
+      const currentUser = authApi.getCurrentUser();
+      if (!currentUser || !currentUser.id) {
+        setError('Please log in to view your orders');
+        setLoading(false);
+        return;
+      }
+      const data = await orderApi.getUserOrders(currentUser.id);
       setOrders(data);
     } catch (err) {
       setError('Failed to load orders');
@@ -63,7 +70,9 @@ const Orders = () => {
               
               <div className="order-details">
                 <p><strong>Vendor:</strong> {order.vendorName || 'N/A'}</p>
-                <p><strong>Total Amount:</strong> ${order.totalAmount}</p>
+                <p><strong>Restaurant:</strong> {order.restaurantName || 'N/A'}</p>
+                <p><strong>Items:</strong> {order.items?.length || 0} items</p>
+                <p><strong>Total Amount:</strong> ₹{order.totalAmount}</p>
                 <p><strong>Delivery Address:</strong> {order.deliveryAddress}</p>
                 <p><strong>Order Date:</strong> {new Date(order.createdAt).toLocaleDateString()}</p>
               </div>

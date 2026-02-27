@@ -33,7 +33,7 @@
 }
 
 .vendor-auth-body::after {
-  background: #38b2ac;
+  background: #7c3aed;
   bottom: -140px;
   right: -120px;
 }
@@ -98,8 +98,8 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #38b2ac;
-  box-shadow: 0 0 0 4px rgba(56, 178, 172, 0.2);
+  background: #7c3aed;
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.2);
 }
 
 .vendor-login-container {

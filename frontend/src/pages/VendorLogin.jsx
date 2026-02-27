@@ -5,6 +5,7 @@ import { login as loginAction, logout } from '../store/authSlice';
 import authApi from '../api/authApi';
 import Input from '../components/Input';
 import Button from '../components/Button';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 import VendorNavbar from '../components/VendorNavbar';
 import './VendorLogin.css';
 
@@ -41,6 +42,33 @@ const VendorLogin = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleGoogleSuccess = async (googleUserData) => {
+    setError('');
+    setLoading(true);
+
+    try {
+      // Clear any previous authentication before logging in as vendor
+      dispatch(logout());
+      authApi.logout();
+      
+      const response = await authApi.googleLogin(googleUserData, 'vendor');
+      authApi.setAuthData(response.token, response.user);
+      dispatch(loginAction({
+        user: response.user,
+        token: response.token
+      }));
+      navigate('/vendor-dashboard');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Google login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = (errorMessage) => {
+    setError(errorMessage);
   };
 
   const handleSubmit = async (e) => {
@@ -118,6 +146,17 @@ const VendorLogin = () => {
                 {loading ? 'Logging in...' : 'Login'}
               </Button>
             </form>
+
+            <div className="auth-divider">
+              <span className="auth-divider-text">Or continue with</span>
+            </div>
+
+            <GoogleLoginButton 
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              role="vendor"
+              disabled={loading}
+            />
 
             <p className="vendor-register-link">
               New partner? <Link to="/vendor-register">Register your restaurant</Link>

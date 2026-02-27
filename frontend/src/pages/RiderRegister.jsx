@@ -5,6 +5,7 @@ import { login as loginAction } from '../store/authSlice';
 import authApi from '../api/authApi';
 import Input from '../components/Input';
 import Button from '../components/Button';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 import './RiderRegister.css';
 
 const RiderRegister = () => {
@@ -28,6 +29,29 @@ const RiderRegister = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleGoogleSuccess = async (googleUserData) => {
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await authApi.googleRegister(googleUserData, 'rider');
+      authApi.setAuthData(response.token, response.user);
+      dispatch(loginAction({
+        user: response.user,
+        token: response.token
+      }));
+      navigate('/delivery-dashboard');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Google registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = (errorMessage) => {
+    setError(errorMessage);
   };
 
   const handleSubmit = async (e) => {
@@ -174,6 +198,17 @@ const RiderRegister = () => {
             {loading ? 'Creating Account...' : 'Start Earning'}
           </Button>
         </form>
+
+        <div className="auth-divider">
+          <span className="auth-divider-text">Or register with</span>
+        </div>
+
+        <GoogleLoginButton 
+          onSuccess={handleGoogleSuccess}
+          onError={handleGoogleError}
+          role="rider"
+          disabled={loading}
+        />
 
         <p className="rider-login-link">
           Already a delivery partner? <Link to="/rider-login">Login here</Link>

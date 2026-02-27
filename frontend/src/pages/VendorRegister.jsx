@@ -6,6 +6,7 @@ import authApi from '../api/authApi';
 import vendorApi from '../api/vendorApi';
 import Input from '../components/Input';
 import Button from '../components/Button';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 import VendorNavbar from '../components/VendorNavbar';
 import './VendorRegister.css';
 
@@ -31,6 +32,39 @@ const VendorRegister = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleGoogleSuccess = async (googleUserData) => {
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await authApi.googleRegister(googleUserData, 'vendor');
+      authApi.setAuthData(response.token, response.user);
+      dispatch(loginAction({
+        user: response.user,
+        token: response.token
+      }));
+
+      // Create vendor profile with Google data
+      await vendorApi.createVendor({
+        name: googleUserData.fullName || 'My Restaurant',
+        description: 'Restaurant description',
+        address: '',
+        phoneNumber: '',
+        cuisineType: 'General'
+      });
+
+      navigate('/vendor-dashboard');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Google registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = (errorMessage) => {
+    setError(errorMessage);
   };
 
   const handleSubmit = async (e) => {
@@ -202,6 +236,17 @@ const VendorRegister = () => {
                 {loading ? 'Registering...' : 'Register'}
               </Button>
             </form>
+
+            <div className="auth-divider">
+              <span className="auth-divider-text">Or register with</span>
+            </div>
+
+            <GoogleLoginButton 
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              role="vendor"
+              disabled={loading}
+            />
 
             <p className="vendor-login-link">
               Already a partner? <Link to="/vendor-login">Login here</Link>

@@ -52,7 +52,7 @@ const DeliveryProfile = () => {
 
         <div className="profile-avatar">
           <div className="avatar-circle">
-            <span className="avatar-icon">🏍️</span>
+            <div className="avatar-icon">📦</div>
           </div>
           <h2>{profileData.fullName || 'Delivery Partner'}</h2>
           <p className="status-badge">Active Partner</p>
@@ -200,21 +200,21 @@ const DeliveryProfile = () => {
 
         <div className="profile-stats">
           <div className="stat-card">
-            <div className="stat-icon">📦</div>
+            <div className="stat-icon delivery-icon"></div>
             <div className="stat-content">
               <p className="stat-label">Total Deliveries</p>
               <p className="stat-value">0</p>
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon">⭐</div>
+            <div className="stat-icon rating-icon"></div>
             <div className="stat-content">
               <p className="stat-label">Rating</p>
               <p className="stat-value">-</p>
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon">💰</div>
+            <div className="stat-icon earnings-icon"></div>
             <div className="stat-content">
               <p className="stat-label">Total Earnings</p>
               <p className="stat-value">₹0</p>

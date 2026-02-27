@@ -1,7 +1,7 @@
 .profile-page {
   min-height: 80vh;
   padding: 2rem 1rem;
-  background-color: #f5f5f5;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .profile-container {
@@ -9,27 +9,53 @@
   margin: 0 auto;
   background-color: white;
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.12);
   overflow: hidden;
 }
 
 .profile-header {
-  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
   color: white;
   padding: 2rem;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 250px;
+  height: 250px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
 }
 
 .profile-avatar {
   font-size: 4rem;
   margin-bottom: 1rem;
   opacity: 0.9;
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .profile-header h1 {
   color: white;
   margin: 0;
   font-size: 1.8rem;
+  position: relative;
+  z-index: 1;
 }
 
 .profile-view,
@@ -58,29 +84,21 @@
   align-items: center;
   gap: 0.5rem;
   font-weight: 600;
-  color: #ff6b35;
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 0.5rem;
   font-size: 0.95rem;
-}
-
-.info-label svg {
-  font-size: 1.1rem;
-}
-
-.info-value {
-  color: #333;
-  margin: 0;
-  font-size: 1rem;
-  line-height: 1.6;
 }
 
 .btn-edit {
   width: 100%;
   padding: 0.75rem 1.5rem;
-  background-color: #ff6b35;
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -89,12 +107,12 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
 }
 
 .btn-edit:hover {
-  background-color: #e55a28;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.3);
 }
 
 /* Form Styles */

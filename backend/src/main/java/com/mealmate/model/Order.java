@@ -21,6 +21,7 @@ public class Order {
 	private String orderNumber;
 	private String userId;
 	private String vendorId;
+    private String vendorName;
 	private List<OrderItem> items;
 	private Double subtotal;
 	private Double tax;

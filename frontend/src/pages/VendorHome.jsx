@@ -72,9 +72,15 @@ const VendorHome = () => {
                   <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
                 </svg>
               </div>
-              <h3>Manage Orders</h3>
-              <p>View and process incoming orders in real-time</p>
-              <button onClick={() => navigate('/vendor-dashboard')} className="stat-link">View Orders →</button>
+              <div className="stat-content">
+                <span className="stat-kicker">Order Desk </span>
+                <h3>Manage Orders</h3>
+                <p>View and process incoming orders in real-time</p>
+              </div>
+              <div className="stat-footer">
+                <button onClick={() => navigate('/vendor-dashboard')} className="stat-link">View Orders →</button>
+                <span className="stat-footnote">Live updates</span>
+              </div>
             </div>
 
             <div className="stat-card">
@@ -83,9 +89,15 @@ const VendorHome = () => {
                   <path d="M12 2v20M2 12h20"/>
                 </svg>
               </div>
-              <h3>Add Menu Items</h3>
-              <p>Update your menu with new dishes and specials</p>
-              <button onClick={() => navigate('/vendor-dashboard')} className="stat-link">Manage Menu →</button>
+              <div className="stat-content">
+                <span className="stat-kicker">Menu Studio</span>
+                <h3>Add Menu Items</h3>
+                <p>Update your menu with new dishes and specials</p>
+              </div>
+              <div className="stat-footer">
+                <button onClick={() => navigate('/vendor-dashboard')} className="stat-link">Manage Menu →</button>
+                <span className="stat-footnote">Edit anytime</span>
+              </div>
             </div>
 
             <div className="stat-card">
@@ -95,9 +107,15 @@ const VendorHome = () => {
                   <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                 </svg>
               </div>
-              <h3>Track Earnings</h3>
-              <p>Monitor your revenue and sales performance</p>
-              <button onClick={() => navigate('/vendor-dashboard')} className="stat-link">View Analytics →</button>
+              <div className="stat-content">
+                <span className="stat-kicker">Revenue</span>
+                <h3>Track Earnings</h3>
+                <p>Monitor your revenue and sales performance</p>
+              </div>
+              <div className="stat-footer">
+                <button onClick={() => navigate('/vendor-dashboard')} className="stat-link">View Analytics →</button>
+                <span className="stat-footnote">Daily snapshots</span>
+              </div>
             </div>
 
             <div className="stat-card">
@@ -107,9 +125,15 @@ const VendorHome = () => {
                   <circle cx="12" cy="7" r="4"/>
                 </svg>
               </div>
-              <h3>Customer Reviews</h3>
-              <p>See what customers are saying about your food</p>
-              <button onClick={() => navigate('/vendor-dashboard')} className="stat-link">View Reviews →</button>
+              <div className="stat-content">
+                <span className="stat-kicker">Feedback</span>
+                <h3>Customer Reviews</h3>
+                <p>See what customers are saying about your food</p>
+              </div>
+              <div className="stat-footer">
+                <button onClick={() => navigate('/vendor-dashboard')} className="stat-link">View Reviews →</button>
+                <span className="stat-footnote">Recent ratings</span>
+              </div>
             </div>
           </div>
         </div>

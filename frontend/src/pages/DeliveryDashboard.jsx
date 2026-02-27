@@ -36,23 +36,29 @@ const DeliveryDashboard = () => {
 
   const fetchDeliveries = async () => {
     try {
-      const data = await orderApi.getAllOrders();
-      // Filter only orders that need delivery and are assigned to this rider
-      const deliveryOrders = data.filter(order => {
-        if (order.status === 'CONFIRMED' || order.status === 'PREPARING') {
-          // Show all confirmed orders (available for pickup)
-          return true;
+      // Fetch available orders for pickup (CONFIRMED, PREPARING statuses)
+      const availableOrders = await orderApi.getAvailableOrdersForRiders();
+      
+      // Fetch orders assigned to this rider (OUT_FOR_DELIVERY, DELIVERED)
+      let assignedOrders = [];
+      if (user?.id) {
+        try {
+          assignedOrders = await orderApi.getRiderOrders(user.id);
+        } catch (err) {
+          console.log('No assigned orders yet');
         }
-        if ((order.status === 'OUT_FOR_DELIVERY' || order.status === 'DELIVERED') && 
-            order.deliveryPartnerId === user?.id) {
-          // Show orders assigned to this rider
-          return true;
-        }
-        return false;
-      });
-      setDeliveries(deliveryOrders);
+      }
+      
+      // Combine both lists and remove duplicates by order ID
+      const allOrders = [...(Array.isArray(availableOrders) ? availableOrders : []), 
+                          ...(Array.isArray(assignedOrders) ? assignedOrders : [])];
+      const uniqueOrders = allOrders.filter((order, index, self) =>
+        index === self.findIndex((o) => o.id === order.id)
+      );
+      
+      setDeliveries(uniqueOrders);
     } catch (err) {
-      console.error('Failed to load deliveries');
+      console.error('Failed to load deliveries:', err);
     } finally {
       setLoading(false);
     }
@@ -109,7 +115,7 @@ const DeliveryDashboard = () => {
   return (
     <div className="delivery-dashboard">
       <h1>Delivery Dashboard</h1>
-      <p className="welcome-msg">Hello, {user?.fullName}! 👋</p>
+      <p className="welcome-msg">Welcome, {user?.fullName || 'Delivery Partner'}!</p>
 
       <div className="filter-buttons">
         <Button 

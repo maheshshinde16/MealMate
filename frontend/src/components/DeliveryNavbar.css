@@ -151,7 +151,22 @@
   cursor: pointer;
   font-size: 0.95rem;
   text-align: left;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dropdown-item .icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: #f0f4f8;
+  color: #7c3aed;
+  font-size: 0.9rem;
 }
 
 .dropdown-item:hover {
@@ -159,14 +174,27 @@
   color: #7c3aed;
 }
 
+.dropdown-item:hover .icon {
+  background: #ede9fe;
+  transform: scale(1.1);
+}
+
 .dropdown-item.logout {
   border-top: 1px solid #e2e8f0;
+  color: #d32f2f;
+}
+
+.dropdown-item.logout .icon {
   color: #d32f2f;
 }
 
 .dropdown-item.logout:hover {
   background-color: #fff5f5;
   color: #b71c1c;
+}
+
+.dropdown-item.logout:hover .icon {
+  background: #fee2e2;
 }
 
 @media (max-width: 768px) {

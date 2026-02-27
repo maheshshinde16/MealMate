@@ -6,7 +6,11 @@ const FoodCard = ({ food, onAddToCart }) => {
   return (
     <div className="food-card">
       <div className="food-image">
-        <span className="food-emoji">🍔</span>
+        {food.imageUrl ? (
+          <img src={food.imageUrl} alt={food.name} className="food-image-img" />
+        ) : (
+          <span className="food-emoji">🍔</span>
+        )}
       </div>
       <div className="food-details">
         <h3 className="food-name">{food.name}</h3>

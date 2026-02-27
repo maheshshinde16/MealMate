@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { CartProvider } from './context/CartContext';
 import './App.css';
 
@@ -50,6 +51,7 @@ import DeliveryProfile from './pages/DeliveryProfile';
 import DeliveryEarnings from './pages/DeliveryEarnings';
 import DeliveryFAQ from './pages/DeliveryFAQ';
 import DeliverySettings from './pages/DeliverySettings';
+import DeliveryHowItWorks from './pages/DeliveryHowItWorks';
 
 // Layouts
 import VendorLayout from './layouts/VendorLayout';
@@ -68,10 +70,18 @@ const theme = {
 };
 
 function App() {
+  const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+
+  if (!googleClientId) {
+    console.warn('REACT_APP_GOOGLE_CLIENT_ID is not defined. Google authentication will not work.');
+  }
+
   return (
-    <ConfigProvider theme={theme}>
-      <CartProvider>
-        <Router>
+    // <GoogleOAuthProvider clientId={googleClientId || ''}>
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+      <ConfigProvider theme={theme}>
+        <CartProvider>
+          <Router>
         <Routes>
           {/* Customer-Facing Routes */}
           <Route path="/*" element={
@@ -163,6 +173,11 @@ function App() {
               <DeliveryFAQ />
             </DeliveryLayout>
           } />
+          <Route path="/delivery-partners/how-it-works" element={
+            <DeliveryLayout>
+              <DeliveryHowItWorks />
+            </DeliveryLayout>
+          } />
           <Route path="/delivery-settings" element={
             <DeliveryLayout>
               <DeliverySettings />
@@ -175,6 +190,7 @@ function App() {
       </Router>
       </CartProvider>
     </ConfigProvider>
+    </GoogleOAuthProvider>
   );
 }
 

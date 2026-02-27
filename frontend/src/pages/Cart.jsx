@@ -22,7 +22,6 @@ const Cart = () => {
   const [mapError, setMapError] = useState('');
   const addressInputRef = useRef(null);
   const placeElementRef = useRef(null);
-  const placeElementHostRef = useRef(null);
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markerRef = useRef(null);
@@ -69,83 +68,69 @@ const Cart = () => {
       return;
     }
 
-    if (!mapInstanceRef.current && mapContainerRef.current) {
-      mapInstanceRef.current = new window.google.maps.Map(mapContainerRef.current, {
-        center: { lat: 20.5937, lng: 78.9629 },
-        zoom: 5,
-        mapTypeControl: false,
-        streetViewControl: false,
-        fullscreenControl: false
-      });
-    }
-
-    const updateMapForPlace = (formatted, location) => {
-      if (formatted) {
-        setDeliveryAddress(formatted);
-      }
-
-      if (location && mapInstanceRef.current) {
-        if (!markerRef.current) {
-          markerRef.current = new window.google.maps.Marker({
-            map: mapInstanceRef.current,
-            position: location
+    // Add a small delay to ensure DOM is fully ready
+    const timeoutId = setTimeout(() => {
+      if (!mapInstanceRef.current && mapContainerRef.current) {
+        try {
+          mapInstanceRef.current = new window.google.maps.Map(mapContainerRef.current, {
+            center: { lat: 20.5937, lng: 78.9629 },
+            zoom: 5,
+            mapTypeControl: false,
+            streetViewControl: false,
+            fullscreenControl: false
           });
-        } else {
-          markerRef.current.setPosition(location);
+        } catch (error) {
+          console.error('Failed to initialize map:', error);
         }
-        mapInstanceRef.current.setCenter(location);
-        mapInstanceRef.current.setZoom(15);
-      }
-    };
-
-    if (window.google.maps.places.PlaceAutocompleteElement) {
-      if (!placeElementHostRef.current) {
-        return;
       }
 
-      if (!placeElementRef.current) {
-        const placeElement = new window.google.maps.places.PlaceAutocompleteElement({
-          types: ['geocode']
-        });
-        placeElement.setAttribute('class', 'address-input');
-        placeElement.setAttribute('placeholder', 'Search location or type address');
-        placeElementHostRef.current.innerHTML = '';
-        placeElementHostRef.current.appendChild(placeElement);
-        placeElementRef.current = placeElement;
-
-        if (addressInputRef.current) {
-          addressInputRef.current.style.display = 'none';
+      const updateMapForPlace = (formatted, location) => {
+        if (formatted) {
+          setDeliveryAddress(formatted);
         }
 
-        placeElement.addEventListener('gmp-placeselect', async (event) => {
-          const place = event.place;
-          if (!place) {
-            return;
-          }
-
+        if (location && mapInstanceRef.current) {
           try {
-            await place.fetchFields({ fields: ['formattedAddress', 'location', 'displayName'] });
-            const formatted = place.formattedAddress || place.displayName || '';
-            updateMapForPlace(formatted, place.location);
+            if (!markerRef.current) {
+              markerRef.current = new window.google.maps.Marker({
+                map: mapInstanceRef.current,
+                position: location
+              });
+            } else {
+              markerRef.current.setPosition(location);
+            }
+            mapInstanceRef.current.setCenter(location);
+            mapInstanceRef.current.setZoom(15);
           } catch (error) {
-            console.error('Failed to fetch place details:', error);
+            console.error('Failed to update map:', error);
           }
-        });
+        }
+      };
+
+      // Use classic Autocomplete instead of PlaceAutocompleteElement for better compatibility
+      if (!placeElementRef.current && addressInputRef.current) {
+        try {
+          const autocomplete = new window.google.maps.places.Autocomplete(addressInputRef.current, {
+            fields: ['formatted_address', 'geometry', 'name'],
+            types: ['geocode']
+          });
+
+          autocomplete.addListener('place_changed', () => {
+            const place = autocomplete.getPlace();
+            const formatted = place.formatted_address || place.name || '';
+            updateMapForPlace(formatted, place.geometry?.location);
+          });
+
+          // Mark as initialized to prevent re-initialization
+          placeElementRef.current = autocomplete;
+        } catch (error) {
+          console.error('Failed to initialize autocomplete:', error);
+          setMapError('Address autocomplete is not available. You can still type the address manually.');
+        }
       }
+    }, 100);
 
-      return;
-    }
-
-    const autocomplete = new window.google.maps.places.Autocomplete(addressInputRef.current, {
-      fields: ['formatted_address', 'geometry', 'name'],
-      types: ['geocode']
-    });
-
-    autocomplete.addListener('place_changed', () => {
-      const place = autocomplete.getPlace();
-      const formatted = place.formatted_address || place.name || '';
-      updateMapForPlace(formatted, place.geometry?.location);
-    });
+    return () => clearTimeout(timeoutId);
   }, [mapReady]);
 
   const handleCheckout = async () => {
@@ -289,7 +274,6 @@ const Cart = () => {
                     className="address-input"
                     required
                   />
-                  <div ref={placeElementHostRef}></div>
                   <p className="address-hint">Select a place from the suggestions for precise delivery.</p>
                   {mapError && <p className="map-error">{mapError}</p>}
                   <div className="map-preview" ref={mapContainerRef}></div>
